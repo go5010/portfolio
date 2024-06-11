@@ -8,7 +8,7 @@ import React from "react";
 const SetAccount = () => {
   return (
     <div className="min-h-screen grid">
-      <div className="md:w-128 place-self-center">
+      <form className="md:w-128 place-self-center">
         <TitleText>個人情報設定</TitleText>
         <TemplateContainer>
           <BlueBulletText>メールアドレス</BlueBulletText>
@@ -30,7 +30,7 @@ const SetAccount = () => {
             </Link>
           </div>
         </TemplateContainer>
-      </div>
+      </form>
     </div>
   );
 };

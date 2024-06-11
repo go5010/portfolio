@@ -15,9 +15,11 @@ const config: Config = {
       },
       colors: {
         "theme-blue": "#0B499D",
+        "theme-blue2": "#EDF1F7",
       },
       width: {
         "128": "32rem",
+        "inquiry-width": "40rem",
       },
     },
     fontFamily: {

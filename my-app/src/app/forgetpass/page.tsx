@@ -8,7 +8,7 @@ import React from "react";
 const ForgetPass = () => {
   return (
     <div className="min-h-screen grid">
-      <div className="md:w-128 place-self-center">
+      <form className="md:w-128 place-self-center">
         <TitleText>パスワードを忘れた場合</TitleText>
         <p className="ml-4 mb-3">
           ご登録いただいたメールアドレスを入力してください．
@@ -24,7 +24,7 @@ const ForgetPass = () => {
           />
           <PrimaryButton>送　信　</PrimaryButton>
         </TemplateContainer>
-      </div>
+      </form>
     </div>
   );
 };
