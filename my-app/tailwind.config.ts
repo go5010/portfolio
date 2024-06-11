@@ -24,6 +24,7 @@ const config: Config = {
     },
     fontFamily: {
       logo: ["UD デジタル 教科書体 NK-B", "Arial"],
+      AdSlogan: ["游ゴシック"],
     },
   },
   plugins: [],
