@@ -8,12 +8,12 @@ export default function Home() {
         <div className="bg-theme-blue text-white text-4xl font-AdSlogan inline-block py-3 pl-7 pr-3">
           旅行計画の手助けに。
         </div>
-        <div className="rounded-full overflow-hidden inline-block w-80 h-80">
+        <div className="rounded-full overflow-hidden inline-block w-80 h-80 relative">
           <Image
             src="/image1.jpg"
             alt=""
             width={500}
-            height={500}
+            height={1000}
             style={{ objectFit: "cover" }}
           />
         </div>
