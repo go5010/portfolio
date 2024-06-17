@@ -21,6 +21,9 @@ const config: Config = {
         "128": "32rem",
         "inquiry-width": "40rem",
       },
+      boxShadow: {
+        TopImageShadow: "inset 0 0 20px 20px rgba(255,255,255,1)",
+      },
     },
     fontFamily: {
       logo: ["UD デジタル 教科書体 NK-B", "Arial"],

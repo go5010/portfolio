@@ -4,7 +4,7 @@ import React from "react";
 const Inquiry = () => {
   return (
     <div className="min-h-screen grid">
-      <div className="md:w-inquiry-width place-self-center">
+      <div className="w-inquiry-width mx-6 place-self-center">
         <div className="text-2xl font-extrabold mb-4 text-center">
           お問い合わせ
         </div>

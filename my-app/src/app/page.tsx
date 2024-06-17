@@ -5,17 +5,31 @@ export default function Home() {
   return (
     <div className="">
       <div className="max-w-screen-lg mx-auto min-h-screen">
-        <div className="bg-theme-blue text-white text-4xl font-AdSlogan inline-block py-3 pl-7 pr-3">
+        <div className="bg-theme-blue text-white text-4xl font-AdSlogan inline-block py-3 pl-7 pr-3 ">
           旅行計画の手助けに。
         </div>
-        <div className="rounded-full overflow-hidden inline-block w-80 h-80 relative">
-          <Image
-            src="/image1.jpg"
-            alt=""
-            width={500}
-            height={1000}
-            style={{ objectFit: "cover" }}
-          />
+        <div className="rounded-full overflow-hidden inline-block w-80 h-80 relative shadow-TopImageShadow">
+          <div className="absolute w-full h-80 right-16 ">
+            <Image
+              src="/image1.jpg"
+              alt=""
+              fill
+              style={{ objectFit: "cover" }}
+              className="overflow-visible"
+            />
+          </div>
+        </div>
+        <div className="rounded-full overflow-hidden inline-block w-80 h-80 relative shadow-TopImageShadow">
+          <div className="absolute w-full h-80">
+            <Image
+              src="/image1.jpg"
+              alt=""
+              width={500}
+              height={1000}
+              style={{ objectFit: "cover" }}
+              className="overflow-visible w-full h-full"
+            />
+          </div>
         </div>
         <div className="rounded-full overflow-hidden inline-block">
           <Image src="/image2.png" alt="" width={500} height={500} />

@@ -7,7 +7,7 @@ import React from "react";
 const CreateAccount = () => {
   return (
     <div className="min-h-screen grid">
-      <form className="md:w-128 place-self-center">
+      <form className="w-128 mx-6 place-self-center">
         <TitleText>アカウントを作成</TitleText>
         <TemplateContainer>
           <BlueBulletText>メールアドレス</BlueBulletText>
