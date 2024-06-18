@@ -1,3 +1,4 @@
+import Hamburger from "@/components/organism/Hamburger";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -44,8 +45,8 @@ export default function Home() {
           <div className="text-center font-extrabold text-3xl pb-16">
             spots viewerの機能
           </div>
-          <div className="flex justify-around">
-            <div className="text-center">
+          <div className="lg:flex justify-around">
+            <div className="text-center mb-14 lg:mb-0">
               <Image
                 src="/search_screenshot.png"
                 alt=""
@@ -71,7 +72,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="max-w-screen-lg mx-auto py-48">
+      <div className="max-w-screen-lg mx-auto lg:py-48 py-32">
         <div className="text-center font-extrabold text-3xl mb-8">
           さっそく使ってみよう！
         </div>

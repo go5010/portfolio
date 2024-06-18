@@ -1,10 +1,12 @@
 "use client";
 // client componentにしてしまって大丈夫か？すべてclientレンダリングにならないか？
 
-import { useLoginUser } from "@/hooks/useLoginUser";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+
+import { useLoginUser } from "@/hooks/useLoginUser";
+import Hamburger from "@/components/organism/Hamburger";
 
 const Header = () => {
   const { user } = useLoginUser();
@@ -13,17 +15,18 @@ const Header = () => {
     <header className="py-5 px-10 border-b-2 ">
       <div className="max-w-screen-lg flex justify-between items-center mx-auto">
         <div>
-          <h1 className="text-3xl font-logo text-theme-blue tracking-tighter">
+          <h1 className="text-2xl md:text-3xl font-logo text-theme-blue tracking-tighter">
             <Link href="/">spots viewer</Link>
           </h1>
         </div>
-        <div className="font-semibold">
+        <Hamburger />
+        <div className="font-semibold hidden md:block">
           {user === null ? (
             <nav>
               <Link
                 href="/login"
                 className={
-                  pathname === "/login" ? "border-b-4 border-gray-600 pb-2" : ""
+                  pathname === "/login" ? "border-b-4 border-gray-500 pb-2" : ""
                 }
               >
                 ログイン
@@ -32,7 +35,7 @@ const Header = () => {
                 href="/createaccount"
                 className={
                   pathname === "/createaccount"
-                    ? "border-b-4 border-gray-600 pb-2 ml-7"
+                    ? "border-b-4 border-gray-500 pb-2 ml-7"
                     : "ml-7"
                 }
               >
@@ -42,7 +45,7 @@ const Header = () => {
                 href="/inquiry"
                 className={
                   pathname === "/inquiry"
-                    ? "border-b-4 border-gray-600 pb-2 ml-7"
+                    ? "border-b-4 border-gray-500 pb-2 ml-7"
                     : "ml-7"
                 }
               >
@@ -56,7 +59,7 @@ const Header = () => {
                 href="/setaccount"
                 className={
                   pathname === "/setaccount"
-                    ? "border-b-4 border-gray-600 pb-2 ml-7"
+                    ? "border-b-4 border-gray-500 pb-2 ml-7"
                     : "ml-7"
                 }
               >
@@ -66,7 +69,7 @@ const Header = () => {
                 href="/inquiry"
                 className={
                   pathname === "/inquiry"
-                    ? "border-b-4 border-gray-600 pb-2 ml-7"
+                    ? "border-b-4 border-gray-500 pb-2 ml-7"
                     : "ml-7"
                 }
               >
