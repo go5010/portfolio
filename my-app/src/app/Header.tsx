@@ -26,7 +26,9 @@ const Header = () => {
               <Link
                 href="/login"
                 className={
-                  pathname === "/login" ? "border-b-4 border-gray-500 pb-2" : ""
+                  pathname === "/login"
+                    ? "border-b-4 border-gray-500 pb-2"
+                    : "hover:opacity-70"
                 }
               >
                 ログイン
@@ -36,7 +38,7 @@ const Header = () => {
                 className={
                   pathname === "/createaccount"
                     ? "border-b-4 border-gray-500 pb-2 ml-7"
-                    : "ml-7"
+                    : "ml-7 hover:opacity-70"
                 }
               >
                 新規登録
@@ -46,7 +48,7 @@ const Header = () => {
                 className={
                   pathname === "/inquiry"
                     ? "border-b-4 border-gray-500 pb-2 ml-7"
-                    : "ml-7"
+                    : "ml-7 hover:opacity-70"
                 }
               >
                 お問い合わせ
@@ -54,13 +56,15 @@ const Header = () => {
             </nav>
           ) : (
             <nav>
-              <Link href="/">ログアウト</Link>
+              <Link href="/" className="hover:opacity-70">
+                ログアウト
+              </Link>
               <Link
                 href="/setaccount"
                 className={
                   pathname === "/setaccount"
                     ? "border-b-4 border-gray-500 pb-2 ml-7"
-                    : "ml-7"
+                    : "ml-7 hover:opacity-70"
                 }
               >
                 アカウント設定
@@ -70,7 +74,7 @@ const Header = () => {
                 className={
                   pathname === "/inquiry"
                     ? "border-b-4 border-gray-500 pb-2 ml-7"
-                    : "ml-7"
+                    : "ml-7 hover:opacity-70"
                 }
               >
                 お問い合わせ

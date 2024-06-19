@@ -7,8 +7,8 @@ import React from "react";
 
 const Login = () => {
   return (
-    <div className="min-h-screen grid">
-      <form className="w-128 mx-6 place-self-center">
+    <div className="min-h-screen flex justify-center items-center">
+      <form className="max-w-128 mx-12 shrink-0">
         <TitleText>ログイン</TitleText>
         <TemplateContainer>
           <BlueBulletText>メールアドレス</BlueBulletText>

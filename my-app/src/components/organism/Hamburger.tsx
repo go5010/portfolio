@@ -46,6 +46,7 @@ const Hamburger = () => {
           <nav className="flex flex-col text-center">
             <Link
               href="/login"
+              onClick={handleMenuOpen}
               className={
                 pathname === "/login"
                   ? "bg-gray-300 py-2"
@@ -56,6 +57,7 @@ const Hamburger = () => {
             </Link>
             <Link
               href="/createaccount"
+              onClick={handleMenuOpen}
               className={
                 pathname === "/createaccount"
                   ? "bg-gray-300 py-2"
@@ -66,6 +68,7 @@ const Hamburger = () => {
             </Link>
             <Link
               href="/inquiry"
+              onClick={handleMenuOpen}
               className={
                 pathname === "/inquiry"
                   ? "bg-gray-300 py-2"
@@ -77,11 +80,16 @@ const Hamburger = () => {
           </nav>
         ) : (
           <nav>
-            <Link href="/" className="py-2 hover:bg-gray-300">
+            <Link
+              href="/"
+              onClick={handleMenuOpen}
+              className="py-2 hover:bg-gray-300"
+            >
               ログアウト
             </Link>
             <Link
               href="/setaccount"
+              onClick={handleMenuOpen}
               className={
                 pathname === "/setaccount"
                   ? "bg-gray-300 py-2"
@@ -92,6 +100,7 @@ const Hamburger = () => {
             </Link>
             <Link
               href="/inquiry"
+              onClick={handleMenuOpen}
               className={
                 pathname === "/inquiry"
                   ? "bg-gray-300 py-2"
