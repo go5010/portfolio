@@ -9,34 +9,15 @@ export default function Home() {
         <div className="bg-theme-blue text-white text-4xl font-AdSlogan inline-block py-3 pl-7 pr-3 ">
           旅行計画の手助けに。
         </div>
-        <div className="rounded-full overflow-hidden inline-block w-80 h-80 relative shadow-TopImageShadow">
-          <div className="absolute w-full h-80 right-16 ">
-            <Image
-              src="/image1.jpg"
-              alt=""
-              fill
-              style={{ objectFit: "cover" }}
-              className="overflow-visible"
-            />
-          </div>
+
+        <div className="rounded-full w-80 h-80 relative after:absolute after:content-[''] after:rounded-full after:top-0 after:bottom-0 after:left-0 after:right-0 after:shadow-[inset_0_0_15px_20px_rgb(255,255,255)]">
+          <Image src="/image1.png" alt="" width={500} height={500} />
         </div>
-        <div className="rounded-full overflow-hidden inline-block w-80 h-80 relative shadow-TopImageShadow">
-          <div className="absolute w-full h-80">
-            <Image
-              src="/image1.jpg"
-              alt=""
-              width={500}
-              height={1000}
-              style={{ objectFit: "cover" }}
-              className="overflow-visible w-full h-full"
-            />
-          </div>
+        <div className="rounded-full w-80 h-80 relative after:absolute after:content-[''] after:rounded-full after:top-0 after:bottom-0 after:left-0 after:right-0 after:shadow-[inset_0_0_15px_20px_rgb(255,255,255)]">
+          <Image src="/image2_2.png" alt="" width={500} height={500} />
         </div>
-        <div className="rounded-full overflow-hidden inline-block">
-          <Image src="/image2.png" alt="" width={500} height={500} />
-        </div>
-        <div className="rounded-full overflow-hidden inline-block">
-          <Image src="/image3.jpg" alt="" width={500} height={500} />
+        <div className="rounded-full w-80 h-80 relative after:absolute after:content-[''] after:rounded-full after:top-0 after:bottom-0 after:left-0 after:right-0 after:shadow-[inset_0_0_15px_20px_rgb(255,255,255)]">
+          <Image src="/image3.png" alt="" width={500} height={500} />
         </div>
       </div>
 
