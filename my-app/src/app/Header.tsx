@@ -12,7 +12,7 @@ const Header = () => {
   const { user } = useLoginUser();
   const pathname = usePathname();
   return (
-    <header className="py-5 px-10 border-b-2 ">
+    <header className="py-5 px-5 sm:px-10 border-b-2 ">
       <div className="max-w-screen-lg flex justify-between items-center mx-auto">
         <div>
           <h1 className="text-2xl md:text-3xl font-logo text-theme-blue tracking-tighter">

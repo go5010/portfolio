@@ -3,9 +3,9 @@ import React from "react";
 
 const Inquiry = () => {
   return (
-    <div className="min-h-screen grid">
-      <div className="w-inquiry-width mx-6 place-self-center">
-        <div className="text-2xl font-extrabold mb-4 text-center">
+    <div className="min-h-screen flex justify-center items-center">
+      <div className="max-w-inquiry-width w-full px-6 shrink-0">
+        <div className="text-[22px] sm:text-2xl font-extrabold mb-4 text-center">
           お問い合わせ
         </div>
         <div className="bg-sky-50 pt-5 pb-8 px-7 rounded-xl mx-auto border-t-4 border-sky-300">
@@ -15,7 +15,7 @@ const Inquiry = () => {
               必須
             </div>
           </div>
-          <textarea className="border-2 rounded w-full h-48 py-1 px-2" />
+          <textarea className="border-2 rounded w-full h-48 py-1 px-2 text-xs sm:text-base" />
           <div className="flex items-center mb-1.5 mt-4">
             <div className="font-semibold">メールアドレス</div>
             <div className="bg-red-500 text-white text-sm px-2 ml-5 rounded ">
@@ -25,7 +25,7 @@ const Inquiry = () => {
           <input
             type="text"
             placeholder="E-mail"
-            className="border-2 rounded w-full py-1 px-2 mb-8"
+            className="border-2 rounded w-full py-1 px-2 mb-8 text-xs sm:text-base"
           />
           <PrimaryButton>送　信　</PrimaryButton>
         </div>
