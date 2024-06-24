@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, {
+  FC,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { useLoginUser } from "@/hooks/useLoginUser";
 import Link from "next/link";
@@ -11,9 +17,35 @@ const Hamburger = () => {
   const handleMenuOpen = () => {
     setOpenMenu(!openMenu);
   };
+  const drawer = useRef<HTMLDivElement>(null);
+  const documentClickHandler = useRef<(e: any) => void>();
+
+  useEffect(() => {
+    documentClickHandler.current = (e: any) => {
+      if (drawer.current!.contains(e.target)) return;
+
+      setOpenMenu(false);
+      removeDocumentClickHandler();
+    };
+  }, []);
+
+  const removeDocumentClickHandler = () => {
+    document.removeEventListener("click", documentClickHandler.current as any);
+  };
+
+  const handleHamburgerClick = () => {
+    setOpenMenu(true);
+    document.addEventListener("click", documentClickHandler.current as any);
+  };
+
+  const handleCloseButtonClick = () => {
+    setOpenMenu(false);
+    removeDocumentClickHandler();
+  };
+
   return (
     <>
-      <button onClick={() => setOpenMenu(true)} className="space-y-2 md:hidden">
+      <button onClick={handleHamburgerClick} className="space-y-2 md:hidden">
         <div className={"w-8 h-0.5 bg-gray-500 rounded-full"} />
         <div className={"w-8 h-0.5 bg-gray-500 rounded-full"} />
         <div className={"w-8 h-0.5 bg-gray-500 rounded-full"} />
@@ -25,21 +57,22 @@ const Hamburger = () => {
             ? "fixed bg-slate-100 right-0 top-0 w-1/3 h-full ease-in-out duration-300 md:hidden text-sm sm:text-base"
             : "fixed right-[-100%] md:hidden text-sm sm:text-base"
         }
+        ref={drawer}
       >
         <div className="text-right my-5 h-[32px] pr-5 sm:pr-10">
           <button
-            onClick={() => setOpenMenu(false)}
+            onClick={handleCloseButtonClick}
             className="space-y-2 md:hidden text-right"
           >
             <div
               className={
-                "w-8 h-0.5 bg-gray-500 rounded-full translate-y-2 rotate-45"
+                "w-8 h-0.5 bg-gray-500 rounded-full translate-y-2.5 sm:translate-y-2 rotate-45"
               }
             />
             <div className={"opacity-0"} />
             <div
               className={
-                "w-8 h-0.5 bg-gray-500 rounded-full -translate-y-0.5 -rotate-45"
+                "w-8 h-0.5 bg-gray-500 rounded-full sm:-translate-y-0.5 -rotate-45"
               }
             />
           </button>
