@@ -54,8 +54,8 @@ const Hamburger = () => {
       <div
         className={
           openMenu
-            ? "fixed bg-slate-100 right-0 top-0 w-1/3 h-full ease-in-out duration-300 md:hidden text-sm sm:text-base"
-            : "fixed right-[-100%] md:hidden text-sm sm:text-base"
+            ? "fixed bg-slate-100 right-0 top-0 w-1/3 h-full ease-in-out duration-300 md:hidden text-xs sm:text-base z-20"
+            : "fixed right-[-100%] md:hidden text-xs sm:text-base"
         }
         ref={drawer}
       >

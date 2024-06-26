@@ -10,7 +10,7 @@ const ForgetPass = () => {
     <div className="min-h-screen flex justify-center items-center">
       <form className="max-w-lg w-full px-6 shrink-0">
         <TitleText>パスワードを忘れた場合</TitleText>
-        <p className="ml-4 mb-3">
+        <p className="ml-4 mb-3 sm:text-bs xs:text-sm">
           ご登録いただいたメールアドレスを入力してください．
           <br />
           メールアドレス宛に，パスワードを送信します．

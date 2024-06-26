@@ -24,7 +24,7 @@ const SetAccount = () => {
             className="border-2 rounded w-full py-1 px-2 mt-1.5 mb-6 text-xs sm:text-base"
           />
           <PrimaryButton>更　新　</PrimaryButton>
-          <div className="text-sky-600 mt-4 text-center text-sm">
+          <div className="text-sky-600 mt-4 text-center sm:text-sm xs:text-xs">
             <Link href="/createaccount">
               アカウントを削除される場合はこちら
             </Link>

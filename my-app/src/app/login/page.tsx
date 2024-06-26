@@ -24,7 +24,7 @@ const Login = () => {
             className="border-2 rounded w-full py-1 px-2 mt-1.5 mb-6 text-xs sm:text-base"
           />
           <PrimaryButton>ログイン</PrimaryButton>
-          <ul className="mt-4 ml-6 text-sm  list-disc">
+          <ul className="mt-4 ml-6 sm:text-sm xs:text-xs list-disc">
             <li className="mb-1">
               <Link href="/forgetpass" className="text-sky-600">
                 パスワードをお忘れの方

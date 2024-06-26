@@ -28,6 +28,12 @@ const config: Config = {
       logo: ["UD デジタル 教科書体 NK-B", "Arial"],
       AdSlogan: ["游ゴシック"],
     },
+    screens: {
+      lg: "1024px",
+      md: "768px",
+      sm: "640px",
+      xs: "320px",
+    },
   },
   plugins: [],
 };

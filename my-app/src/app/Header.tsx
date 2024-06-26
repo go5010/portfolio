@@ -15,7 +15,7 @@ const Header = () => {
     <header className="py-5 px-5 sm:px-10 border-b-2 ">
       <div className="max-w-screen-lg flex justify-between items-center mx-auto">
         <div>
-          <h1 className="text-2xl md:text-3xl font-logo text-theme-blue tracking-tighter">
+          <h1 className="xs:text-lg sm:text-2xl md:text-3xl font-logo text-theme-blue tracking-tighter">
             <Link href="/">spots viewer</Link>
           </h1>
         </div>
