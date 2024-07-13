@@ -5,7 +5,7 @@ const Schedule = () => {
   return (
     <div className="flex">
       <ScheduleSidebar />
-      <div></div>
+      <div>←　計画作成する旅行を選択しましょう！</div>
     </div>
   );
 };
