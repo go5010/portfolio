@@ -59,21 +59,28 @@ const ScheduleSidebar = () => {
   function escapeRegExp(string: string) {
     return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
   }
-  const re = new RegExp(
-    `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
-  );
-  const urlTripIDTemp = pathname.match(re);
-  const urlTripID = urlTripIDTemp![1];
-  const urlTripDayTemp = pathname.match(/Day(.*)/);
-  const urlTripDay = Number(urlTripDayTemp![1]);
+  let urlTripID: any = null;
+  let urlTripDay: any = null;
+  if (pathname !== "/schedule" && pathname !== "/schedule" + users.id) {
+    const re = new RegExp(
+      `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
+    );
+    const urlTripIDTemp = pathname.match(re);
+    urlTripID = urlTripIDTemp![1];
+    const urlTripDayTemp = pathname.match(/Day(.*)/);
+    urlTripDay = Number(urlTripDayTemp![1]);
+  }
 
   return (
     <div className="h-[1000px] w-[250px] bg-slate-100 border-r-2">
       <ul className="pt-4 pl-6 mb-2 font-semibold">スケジュール一覧</ul>
       {userTrip.map((trip, index) => {
         return (
-          <div className="pl-6 w-full">
-            <button onClick={() => handleTripClick(index)} className="flex">
+          <div className="pl-6">
+            <button
+              onClick={() => handleTripClick(index)}
+              className="flex w-full hover:bg-gray-200"
+            >
               <div className="h-[24px] flex items-center mr-1.5">
                 {tripOpen[index].open ? <SlArrowDown /> : <SlArrowRight />}
               </div>
@@ -82,7 +89,7 @@ const ScheduleSidebar = () => {
             {tripOpen[index].open === true &&
               trip.schedules.map((array, scheduleIndex) => {
                 return (
-                  <div>
+                  <div className="pl-4">
                     <Link
                       href={
                         "/schedule/" +
@@ -95,21 +102,28 @@ const ScheduleSidebar = () => {
                       className={
                         trip.id === urlTripID &&
                         scheduleIndex + 1 === urlTripDay
-                          ? "pl-4 bg-gray-300 inline-block w-full"
-                          : "pl-4 hover:bg-gray-200 inline-block w-full"
+                          ? "bg-gray-300 inline-block w-full"
+                          : "hover:bg-gray-200 inline-block w-full"
                       }
                     >{`・${scheduleIndex + 1}日目`}</Link>
                   </div>
                 );
               })}
             {tripOpen[index].open === true && (
-              <button className="pl-4 my-1 hover:bg-gray-200 w-full text-left">
-                ＋ 日程を追加
-              </button>
+              <div className="pl-4">
+                <button className="my-1 hover:bg-gray-200 w-full text-left">
+                  ＋ 日程を追加
+                </button>
+              </div>
             )}
           </div>
         );
       })}
+      <div className="pl-6">
+        <button className="mt-6 hover:bg-gray-200 w-full text-left">
+          ＋ 新規作成
+        </button>
+      </div>
     </div>
   );
 };
