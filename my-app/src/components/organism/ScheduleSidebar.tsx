@@ -61,7 +61,7 @@ const ScheduleSidebar = () => {
   }
   let urlTripID: any = null;
   let urlTripDay: any = null;
-  if (pathname !== "/schedule" && pathname !== "/schedule" + users.id) {
+  if (pathname !== "/schedule" && pathname !== "/schedule/" + users.id) {
     const re = new RegExp(
       `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
     );
@@ -76,36 +76,48 @@ const ScheduleSidebar = () => {
       <ul className="pt-4 pl-6 mb-2 font-semibold">スケジュール一覧</ul>
       {userTrip.map((trip, index) => {
         return (
-          <div className="pl-6">
-            <button
-              onClick={() => handleTripClick(index)}
-              className="flex w-full hover:bg-gray-200"
-            >
-              <div className="h-[24px] flex items-center mr-1.5">
-                {tripOpen[index].open ? <SlArrowDown /> : <SlArrowRight />}
-              </div>
-              {trip.title}
-            </button>
+          <div className="pl-6 ">
+            <div className="flex hover:bg-gray-200 group">
+              <button
+                onClick={() => handleTripClick(index)}
+                className="flex w-full "
+              >
+                <div className="h-[24px] flex items-center mr-1.5">
+                  {tripOpen[index].open ? <SlArrowDown /> : <SlArrowRight />}
+                </div>
+                {trip.title}
+              </button>
+              <button className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block">
+                …
+              </button>
+            </div>
             {tripOpen[index].open === true &&
               trip.schedules.map((array, scheduleIndex) => {
                 return (
                   <div className="pl-4">
-                    <Link
-                      href={
-                        "/schedule/" +
-                        users.id +
-                        "/" +
-                        userTrip[index].id +
-                        "-Day" +
-                        (scheduleIndex + 1)
-                      }
+                    <div
                       className={
                         trip.id === urlTripID &&
                         scheduleIndex + 1 === urlTripDay
-                          ? "bg-gray-300 inline-block w-full"
-                          : "hover:bg-gray-200 inline-block w-full"
+                          ? " flex group bg-gray-300"
+                          : "flex group hover:bg-gray-200"
                       }
-                    >{`・${scheduleIndex + 1}日目`}</Link>
+                    >
+                      <Link
+                        href={
+                          "/schedule/" +
+                          users.id +
+                          "/" +
+                          userTrip[index].id +
+                          "-Day" +
+                          (scheduleIndex + 1)
+                        }
+                        className="inline-block w-full"
+                      >{`・${scheduleIndex + 1}日目`}</Link>
+                      <button className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block">
+                        …
+                      </button>
+                    </div>
                   </div>
                 );
               })}
