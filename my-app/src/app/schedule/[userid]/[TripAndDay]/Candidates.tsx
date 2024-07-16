@@ -43,7 +43,7 @@ const Candidates = () => {
           首里城
         </button>
         <button className="border border-gray-300 shadow-md rounded-lg w-4/5 text-left px-3 py-2 mb-3">
-          首里城
+          首里城a
         </button>
       </div>
       <div>google map, 移動時間検索</div>
