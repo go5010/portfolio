@@ -58,16 +58,16 @@ const Schedule = () => {
   return (
     <div className="flex">
       <ScheduleSidebar />
-      <div className="grow px-7 pt-5">
-        <div className="pb-5 ml-2">
+      <div className="grow px-7 pt-6">
+        <div className="mb-6 ml-2 font-extrabold xs:text-lg md:text-xl">
           {userTripTitle}　{`>`}　{tripDay}日目
         </div>
-        <div className="flex border-b-2 pb-2">
+        <div className="flex border-b-2 pb-1">
           <div
             onClick={() => setCandiOrSeacrch("candidates")}
             className={
               candiOrSearch === "candidates"
-                ? "ml-8 pb-1 px-1 border-b-4 border-gray-600"
+                ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
                 : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
             }
           >
@@ -77,7 +77,7 @@ const Schedule = () => {
             onClick={() => setCandiOrSeacrch("search")}
             className={
               candiOrSearch === "search"
-                ? "ml-8 pb-1 px-1 border-b-4 border-gray-600"
+                ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
                 : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
             }
           >
