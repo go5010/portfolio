@@ -1,10 +1,15 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import Rating from "@mui/material/Rating";
 import { ImShrink2 } from "react-icons/im";
 import { usePathname } from "next/navigation";
 
-const Candidates = () => {
+type CardOpenType = Array<{ spotNo: number; open: boolean }>;
+
+const Candidates: FC<{
+  cardOpen: CardOpenType;
+  setCardOpen: Dispatch<SetStateAction<CardOpenType>>;
+}> = ({ cardOpen, setCardOpen }) => {
   const users = { id: "userxxxxx", name: "Gota Arai", email: "xxx@gmail.com" };
   const userTrip = [
     {
@@ -57,27 +62,13 @@ const Candidates = () => {
   function escapeRegExp(string: string) {
     return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
   }
-  let urlTripID: any = null;
-  let urlTripDay: any = null;
-  if (pathname !== "/schedule" && pathname !== "/schedule/" + users.id) {
-    const re = new RegExp(
-      `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
-    );
-    const urlTripIDTemp = pathname.match(re);
-    urlTripID = urlTripIDTemp![1];
-    const urlTripDayTemp = pathname.match(/Day(.*)/);
-    urlTripDay = Number(urlTripDayTemp![1]);
-  }
-
-  const [cardOpen, setCardOpen] = useState(
-    userTrip
-      .find((trip) => {
-        return trip.id === urlTripID;
-      })
-      ?.schedules[urlTripDay - 1].map((spot, index) => {
-        return { spotNo: index + 1, open: false };
-      })
+  const re = new RegExp(
+    `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
   );
+  const urlTripIDTemp = pathname.match(re);
+  const urlTripID = urlTripIDTemp![1];
+  const urlTripDayTemp = pathname.match(/Day(.*)/);
+  const urlTripDay = Number(urlTripDayTemp![1]);
 
   const handleCardClick = (clickedIndex: number) => {
     setCardOpen(

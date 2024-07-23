@@ -1,16 +1,29 @@
 "use client";
 // client componentにしてしまって大丈夫か？すべてclientレンダリングにならないか？
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 
 import { useLoginUser } from "@/hooks/useLoginUser";
 import Hamburger from "@/components/organism/Hamburger";
 
 const Header = () => {
-  const { user } = useLoginUser();
+  const { user, setUser } = useLoginUser();
+  const router = useRouter();
   const pathname = usePathname();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const logoutDialogOpen = () => {
+    setDialogOpen(true);
+  };
+  const logoutDialogClose = () => {
+    setDialogOpen(false);
+  };
+  const handleLogout = () => {
+    setUser(null);
+    router.push("/");
+  };
   return (
     <header className="py-5 px-5 sm:px-10 border-b-2 ">
       <div className="max-w-screen-lg flex justify-between items-center mx-auto">
@@ -56,9 +69,32 @@ const Header = () => {
             </nav>
           ) : (
             <nav>
-              <Link href="/" className="hover:opacity-70">
+              <button className="hover:opacity-70" onClick={logoutDialogOpen}>
                 ログアウト
-              </Link>
+              </button>
+              <Dialog
+                open={dialogOpen}
+                onClose={logoutDialogClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"ログアウトしますか？"}
+                </DialogTitle>
+                <DialogActions>
+                  <Button
+                    onClick={() => {
+                      logoutDialogClose();
+                      handleLogout();
+                    }}
+                  >
+                    はい
+                  </Button>
+                  <Button onClick={logoutDialogClose} autoFocus>
+                    いいえ
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Link
                 href="/setaccount"
                 className={

@@ -21,8 +21,16 @@ const Schedule = () => {
             memo: "写真を撮る",
             location: { lat: 135, lng: 40 },
           },
+          { title: "spot2", memo: "~~食べる", location: { lat: 136, lng: 41 } },
         ],
-        [{ title: "spot2", memo: "~~食べる", location: { lat: 136, lng: 41 } }],
+        [
+          {
+            title: "spot3",
+            memo: "写真を撮る",
+            location: { lat: 135, lng: 40 },
+          },
+          { title: "spot4", memo: "~~食べる", location: { lat: 136, lng: 41 } },
+        ],
       ],
     },
     {
@@ -31,12 +39,20 @@ const Schedule = () => {
       schedules: [
         [
           {
-            title: "spot3",
+            title: "spot5",
             memo: "写真を撮る",
             location: { lat: 137, lng: 40 },
           },
+          { title: "spot6", memo: "~~食べる", location: { lat: 134, lng: 41 } },
         ],
-        [{ title: "spot4", memo: "~~食べる", location: { lat: 134, lng: 41 } }],
+        [
+          {
+            title: "spot5",
+            memo: "写真を撮る",
+            location: { lat: 137, lng: 40 },
+          },
+          { title: "spot8", memo: "~~食べる", location: { lat: 134, lng: 41 } },
+        ],
       ],
     },
   ];
@@ -47,20 +63,30 @@ const Schedule = () => {
   const re = new RegExp(
     `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
   );
-  const userTripIDTemp = pathname.match(re);
-  const userTripID = userTripIDTemp![1];
-  const tripDayTemp = pathname.match(/Day(.*)/);
-  const tripDay = tripDayTemp![1];
+  const urlTripIDTemp = pathname.match(re);
+  const urlTripID = urlTripIDTemp![1];
+  const urlTripDayTemp = pathname.match(/Day(.*)/);
+  const urlTripDay = Number(urlTripDayTemp![1]);
   const userTripTitle = userTrip.find((trip) => {
-    return trip.id === userTripID;
+    return trip.id === urlTripID;
   })!.title;
+
+  const [cardOpen, setCardOpen] = useState(
+    userTrip
+      .find((trip) => {
+        return trip.id === urlTripID;
+      })!
+      .schedules[urlTripDay - 1].map((spot, index) => {
+        return { spotNo: index + 1, open: false };
+      })
+  );
 
   return (
     <div className="flex">
       <ScheduleSidebar />
       <div className="grow px-7 pt-6">
         <div className="mb-6 ml-2 font-extrabold xs:text-lg md:text-xl">
-          {userTripTitle}　{`>`}　{tripDay}日目
+          {userTripTitle}　{`>`}　{urlTripDay}日目
         </div>
         <div className="flex border-b-2 pb-1">
           <div
@@ -84,7 +110,11 @@ const Schedule = () => {
             検索
           </div>
         </div>
-        {candiOrSearch === "candidates" ? <Candidates /> : <SearchArea />}
+        {candiOrSearch === "candidates" ? (
+          <Candidates cardOpen={cardOpen} setCardOpen={setCardOpen} />
+        ) : (
+          <SearchArea />
+        )}
       </div>
     </div>
   );
