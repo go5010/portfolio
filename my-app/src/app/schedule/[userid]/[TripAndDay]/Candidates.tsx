@@ -130,6 +130,7 @@ const Candidates: FC<{
                           size="small"
                         />
                       </div>
+                      <div>住所，写真</div>
                       <div>・営業日/時間</div>
                       <br />
                       <div className="mb-[75px]">・メモ</div>

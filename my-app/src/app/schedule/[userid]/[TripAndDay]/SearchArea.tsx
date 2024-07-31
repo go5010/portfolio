@@ -1,11 +1,12 @@
 import React from "react";
-import Button from "@mui/material/Button";
 
 export const SearchArea = () => {
   return (
     <>
       <div>SearchArea</div>
-      <Button variant="contained">Hello world</Button>
+      <input className="border rounded-tl-md rounded-bl-md"></input>
+      <input className="border"></input>
+      <input className="border"></input>
     </>
   );
 };

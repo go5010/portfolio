@@ -3,6 +3,7 @@ import Header from "./Header";
 import "./globals.css";
 import type { Metadata } from "next";
 import Footer from "./Footer";
+import AppProvider from "./provider";
 
 export const metadata: Metadata = {
   title: "portfolio",
@@ -17,11 +18,13 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <UserProvider>
-          <Header />
-          {children}
-          <Footer />
-        </UserProvider>
+        <AppProvider>
+          <UserProvider>
+            <Header />
+            {children}
+            <Footer />
+          </UserProvider>
+        </AppProvider>
       </body>
     </html>
   );
