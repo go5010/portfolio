@@ -12,6 +12,9 @@ import {
   addDoc,
   query,
   where,
+  orderBy,
+  deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 export async function getTests(): Promise<any[] | null> {
@@ -82,4 +85,81 @@ export async function renameTrip(): Promise<any> {
     ),
     { title: "入力した旅行名" }
   );
+}
+
+export async function addDay(): Promise<any> {
+  const tripsRef = collection(firestore, "trips");
+  const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q1Snapshot = await getDocs(q1);
+  const userTripsRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips"
+  );
+  const q2 = query(userTripsRef, where("title", "==", "入力した旅行名"));
+  const q2Snapshot = await getDocs(q2);
+  const daysRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips",
+    q2Snapshot.docs[0].id,
+    "days"
+  );
+  const q3 = query(daysRef, orderBy("day", "desc"));
+  const q3Snapshot = await getDocs(q3);
+  const newDay = q3Snapshot.docs[0].data().day + 1;
+
+  await addDoc(
+    collection(
+      firestore,
+      "trips",
+      q1Snapshot.docs[0].id,
+      "userTrips",
+      q2Snapshot.docs[0].id,
+      "days"
+    ),
+    { day: newDay, schedules: [] }
+  );
+}
+
+// 本来は引数に日程(number)を渡す
+export async function deleteDay(): Promise<any> {
+  const tripsRef = collection(firestore, "trips");
+  const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q1Snapshot = await getDocs(q1);
+  const userTripsRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips"
+  );
+  const q2 = query(userTripsRef, where("title", "==", "入力した旅行名"));
+  const q2Snapshot = await getDocs(q2);
+  const daysRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips",
+    q2Snapshot.docs[0].id,
+    "days"
+  );
+  // dayフィールドの最大値を取得
+  const q3 = query(daysRef, orderBy("day", "desc"));
+  const q3Snapshot = await getDocs(q3);
+  const maxDay = q3Snapshot.docs[0].data().day;
+  // 仮に２日目を削除
+  const delTargetDay = 2;
+  const q4 = query(daysRef, where("day", "==", delTargetDay));
+  const q4Snapshot = await getDocs(q4);
+  await deleteDoc(q4Snapshot.docs[0].ref);
+  // 削除された日程の分，前に詰める
+  if (delTargetDay !== maxDay) {
+    q3Snapshot.forEach((doc) => {
+      if (doc.data().day > delTargetDay) {
+        updateDoc(doc.ref, { day: doc.data().day - 1 });
+      }
+    });
+  }
 }

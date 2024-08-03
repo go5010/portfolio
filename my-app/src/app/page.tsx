@@ -6,7 +6,7 @@ import Image3WithBlur from "@/components/atoms/Image3WithBlur";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { createTrip, getTests, renameTrip } from "./_api/db";
+import { addDay, createTrip, deleteDay, getTests, renameTrip } from "./_api/db";
 import { DocumentData } from "firebase/firestore";
 
 export default function Home() {
@@ -25,7 +25,9 @@ export default function Home() {
       }
     };
     fetchTestData();
-    renameTrip();
+    // renameTrip();
+    // addDay();
+    deleteDay();
   }, []);
   return (
     <div className="">
