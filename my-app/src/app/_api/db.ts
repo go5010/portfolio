@@ -163,3 +163,31 @@ export async function deleteDay(): Promise<any> {
     });
   }
 }
+
+export async function deleteTrip(): Promise<any> {
+  const delTargetTrip = "削除する旅行";
+  const tripsRef = collection(firestore, "trips");
+  const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q1Snapshot = await getDocs(q1);
+  const userTripsRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips"
+  );
+  const q2 = query(userTripsRef, where("title", "==", delTargetTrip));
+  const q2Snapshot = await getDocs(q2);
+  const daysRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips",
+    q2Snapshot.docs[0].id,
+    "days"
+  );
+  const daysSnapshot = await getDocs(daysRef);
+  daysSnapshot.forEach((doc) => {
+    deleteDoc(doc.ref);
+  });
+  await deleteDoc(q2Snapshot.docs[0].ref);
+}

@@ -6,28 +6,35 @@ import Image3WithBlur from "@/components/atoms/Image3WithBlur";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { addDay, createTrip, deleteDay, getTests, renameTrip } from "./_api/db";
+import {
+  addDay,
+  createTrip,
+  deleteDay,
+  deleteTrip,
+  getTests,
+  renameTrip,
+} from "./_api/db";
 import { DocumentData } from "firebase/firestore";
 
 export default function Home() {
   const [test, setTest] = useState<DocumentData[]>();
   useEffect(() => {
-    const fetchTestData = async () => {
-      try {
-        const testData = await getTests();
-        console.log("aaaaa");
-        console.log(testData);
-        console.log("aaaaa");
-        if (testData) setTest(testData);
-      } catch (error) {
-        console.error("データの取得に失敗しました:", error);
-        throw error;
-      }
-    };
-    fetchTestData();
+    // const fetchTestData = async () => {
+    //   try {
+    //     const testData = await getTests();
+    //     console.log("aaaaa");
+    //     console.log(testData);
+    //     console.log("aaaaa");
+    //     if (testData) setTest(testData);
+    //   } catch (error) {
+    //     console.error("データの取得に失敗しました:", error);
+    //     throw error;
+    //   }
+    // };
+    // fetchTestData();
     // renameTrip();
     // addDay();
-    deleteDay();
+    // deleteTrip();
   }, []);
   return (
     <div className="">

@@ -96,7 +96,7 @@ const ScheduleSidebar = () => {
       <ul className="pt-4 pl-6 mb-2 font-semibold">スケジュール一覧</ul>
       {userTrip.map((trip, index) => {
         return (
-          <div className="pl-6">
+          <div className="pl-6" key={trip.id}>
             <div className="flex hover:bg-gray-200 group">
               <button
                 onClick={() => handleTripClick(index)}
