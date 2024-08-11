@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createTrip } from "@/app/_api/db";
+import React, { useEffect, useRef, useState } from "react";
 
 export const SearchArea = () => {
   const [inputmode, setInputmode] = useState(false);
@@ -10,12 +11,12 @@ export const SearchArea = () => {
     if (event.key === "Enter" || event.key === "Tab") {
       setInputmode(false);
       removeDocumentClickHandler();
-      // ↓ここにfirestoreのtitleフィールド書き換えの関数を書く
-      newTripName !== "" && console.log(newTripName);
+      newTripName !== "" && createTrip(newTripName);
       setNewTripName("");
     } else if (event.key === "Escape") {
       setInputmode(false);
       removeDocumentClickHandler();
+      setNewTripName("");
     }
   };
   const namingInput = useRef<HTMLInputElement>(null);
@@ -36,6 +37,10 @@ export const SearchArea = () => {
     setInputmode(true);
     document.addEventListener("click", documentClickHandler.current as any);
   };
+  if (!inputmode) {
+    newTripName !== "" && createTrip(newTripName);
+    newTripName !== "" && setNewTripName("");
+  }
 
   return (
     <>

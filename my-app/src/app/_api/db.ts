@@ -15,6 +15,7 @@ import {
   orderBy,
   deleteDoc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 
 export async function getTests(): Promise<any[] | null> {
@@ -42,13 +43,13 @@ export async function getTests(): Promise<any[] | null> {
   }
 }
 
-export async function createTrip(): Promise<any> {
+export async function createTrip(tripName: string): Promise<any> {
   const tripsRef = collection(firestore, "trips");
   const q = query(tripsRef, where("userID", "==", "xxxxx"));
   const querySnapshot = await getDocs(q);
   const tripDoc = await addDoc(
     collection(firestore, "trips", querySnapshot.docs[0].id, "userTrips"),
-    { title: "沖縄旅行" }
+    { title: tripName }
   );
   await addDoc(
     collection(
@@ -190,4 +191,44 @@ export async function deleteTrip(): Promise<any> {
     deleteDoc(doc.ref);
   });
   await deleteDoc(q2Snapshot.docs[0].ref);
+}
+
+export async function createTripListArr(): Promise<any> {
+  const targetUser = "testuser";
+  const tripsRef = collection(firestore, "trips");
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1Snapshot = await getDocs(q1);
+  const userTripsRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips"
+  );
+  const q2 = query(userTripsRef);
+  const q2Snapshot = await getDocs(q2);
+
+  const tripList = [];
+  q2Snapshot.forEach((userTrip) => {
+    let oneTripObj = {
+      id: userTrip.id,
+      title: userTrip.data().title,
+      schedules: [],
+    };
+    const daysRef = collection(
+      firestore,
+      "trips",
+      q1Snapshot.docs[0].id,
+      "userTrips",
+      userTrip.id,
+      "days"
+    );
+    const q3 = query(daysRef);
+    const q3Snapshot = await getDoc(q3);
+    q3Snapshot.forEach((dayDoc) => {
+      oneTripObj.schedules = dayDoc.data().schedules;
+    });
+    tripList.push(oneTripObj);
+  });
+
+  // return tripList
 }
