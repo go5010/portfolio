@@ -208,8 +208,8 @@ export async function createTripListArr(): Promise<any> {
   const q2Snapshot = await getDocs(q2);
 
   const tripList = [];
-  q2Snapshot.forEach((userTrip) => {
-    let oneTripObj = {
+  for (const userTrip of q2Snapshot.docs) {
+    let oneTripObj: { id: string; title: string; schedules: [][] } = {
       id: userTrip.id,
       title: userTrip.data().title,
       schedules: [],
@@ -223,12 +223,12 @@ export async function createTripListArr(): Promise<any> {
       "days"
     );
     const q3 = query(daysRef);
-    const q3Snapshot = await getDoc(q3);
+    const q3Snapshot = await getDocs(q3);
     q3Snapshot.forEach((dayDoc) => {
-      oneTripObj.schedules = dayDoc.data().schedules;
+      oneTripObj.schedules.push(dayDoc.data().schedules);
     });
     tripList.push(oneTripObj);
-  });
+  }
 
-  // return tripList
+  return tripList;
 }

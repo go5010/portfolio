@@ -6,49 +6,69 @@ import React, { useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
+import { createTripListArr } from "@/app/_api/db";
+
+type schedulesType = {
+  title: string;
+  memo: string;
+  location: { lat: number; lng: number };
+}[][];
+type userTripType = { id: string; title: string; schedules: schedulesType };
 
 const ScheduleSidebar = () => {
   const users = { id: "userxxxxx", name: "Gota Arai", email: "xxx@gmail.com" };
-  const userTrip = [
-    {
-      id: "trip11111",
-      title: "旅行1",
-      schedules: [
-        [
-          {
-            title: "spot1",
-            memo: "写真を撮る",
-            location: { lat: 135, lng: 40 },
-          },
-        ],
-        [{ title: "spot2", memo: "~~食べる", location: { lat: 136, lng: 41 } }],
-      ],
-    },
-    {
-      id: "trip22222",
-      title: "旅行2",
-      schedules: [
-        [
-          {
-            title: "spot3",
-            memo: "写真を撮る",
-            location: { lat: 137, lng: 40 },
-          },
-        ],
-        [{ title: "spot4", memo: "~~食べる", location: { lat: 134, lng: 41 } }],
-      ],
-    },
-  ];
+  let userTrip!: userTripType[];
+  let [tripOpen, setTripOpen] = useState<
+    { tripNo: number; open: boolean }[] | undefined
+  >();
+  async () => {
+    userTrip = await createTripListArr();
+    setTripOpen(
+      userTrip.map((trip, index) => {
+        return { tripNo: index + 1, open: false };
+      })
+    );
+  };
+  // const userTrip = [
+  //   {
+  //     id: "trip11111",
+  //     title: "旅行1",
+  //     schedules: [
+  //       [
+  //         {
+  //           title: "spot1",
+  //           memo: "写真を撮る",
+  //           location: { lat: 135, lng: 40 },
+  //         },
+  //       ],
+  //       [{ title: "spot2", memo: "~~食べる", location: { lat: 136, lng: 41 } }],
+  //     ],
+  //   },
+  //   {
+  //     id: "trip22222",
+  //     title: "旅行2",
+  //     schedules: [
+  //       [
+  //         {
+  //           title: "spot3",
+  //           memo: "写真を撮る",
+  //           location: { lat: 137, lng: 40 },
+  //         },
+  //       ],
+  //       [{ title: "spot4", memo: "~~食べる", location: { lat: 134, lng: 41 } }],
+  //     ],
+  //   },
+  // ];
 
-  const [tripOpen, setTripOpen] = useState(
-    userTrip.map((trip, index) => {
-      return { tripNo: index + 1, open: false };
-    })
-  );
+  // const [tripOpen, setTripOpen] = useState(
+  //   userTrip.map((trip, index) => {
+  //     return { tripNo: index + 1, open: false };
+  //   })
+  // );
 
   const handleTripClick = (clickedIndex: number) => {
     setTripOpen(
-      tripOpen.map((trip, index) => {
+      tripOpen!.map((trip, index) => {
         if (index === clickedIndex) {
           trip.open = !trip.open;
         }
@@ -103,7 +123,7 @@ const ScheduleSidebar = () => {
                 className="flex w-full "
               >
                 <div className="h-[24px] flex items-center mr-1.5">
-                  {tripOpen[index].open ? <SlArrowDown /> : <SlArrowRight />}
+                  {tripOpen![index].open ? <SlArrowDown /> : <SlArrowRight />}
                 </div>
                 {trip.title}
               </button>
@@ -156,7 +176,7 @@ const ScheduleSidebar = () => {
                 </MenuItem>
               </Menu>
             </div>
-            {tripOpen[index].open === true &&
+            {tripOpen![index].open === true &&
               trip.schedules.map((array, scheduleIndex) => {
                 return (
                   <div className="pl-4">
@@ -227,7 +247,7 @@ const ScheduleSidebar = () => {
                   </div>
                 );
               })}
-            {tripOpen[index].open === true && (
+            {tripOpen![index].open === true && (
               <div className="pl-4">
                 <button className="my-1 hover:bg-gray-200 w-full text-left">
                   ＋ 日程を追加
