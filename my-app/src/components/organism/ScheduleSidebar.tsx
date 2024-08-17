@@ -7,6 +7,7 @@ import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
 import { createTripListArr } from "@/app/_api/db";
+import NewTripInput from "../atoms/NewTripInput";
 
 type schedulesType = {
   title: string;
@@ -21,6 +22,10 @@ const ScheduleSidebar = () => {
   const [tripOpen, setTripOpen] = useState<
     { tripNo: number; open: boolean }[] | undefined
   >();
+  const [inputmode, setInputmode] = useState<
+    { tripNo: number; input: boolean }[] | undefined
+  >();
+  const [newTripInput, setNewTripInput] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -29,6 +34,11 @@ const ScheduleSidebar = () => {
       setTripOpen(
         trips.map((_, index) => {
           return { tripNo: index + 1, open: false };
+        })
+      );
+      setInputmode(
+        trips.map((_, index) => {
+          return { tripNo: index + 1, input: false };
         })
       );
     };
@@ -70,6 +80,17 @@ const ScheduleSidebar = () => {
   const handleTripEditClose = () => {
     setTripAnchorEl(null);
   };
+  const handleRenameTrip = (clickedIndex: number) => {
+    setInputmode(
+      inputmode!.map((trip, index) => {
+        if (index === clickedIndex) {
+          trip.input = !trip.input;
+        }
+        return trip;
+      })
+    );
+    setTripAnchorEl(null);
+  };
 
   const [dayAnchorEl, setDayAnchorEl] = useState<null | HTMLElement>(null);
   const dayEditOpen = Boolean(dayAnchorEl);
@@ -98,7 +119,7 @@ const ScheduleSidebar = () => {
                 <div className="h-[24px] flex items-center mr-1.5">
                   {tripOpen![index].open ? <SlArrowDown /> : <SlArrowRight />}
                 </div>
-                {trip.title}
+                {inputmode![index].input ? <input /> : <div>{trip.title}</div>}
               </button>
               <button
                 className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block"
@@ -139,7 +160,7 @@ const ScheduleSidebar = () => {
                   },
                 }}
               >
-                <MenuItem onClick={handleTripEditClose}>
+                <MenuItem onClick={() => handleRenameTrip(index)}>
                   <MdEdit size={18} />
                   &nbsp;名前を変更
                 </MenuItem>
@@ -230,6 +251,12 @@ const ScheduleSidebar = () => {
           </div>
         );
       })}
+      {newTripInput && (
+        <NewTripInput
+          newTripInput={newTripInput}
+          setNewTripInput={setNewTripInput}
+        />
+      )}
       <div className="pl-6">
         <button className="mt-6 hover:bg-gray-200 w-full text-left">
           ＋ 新規作成

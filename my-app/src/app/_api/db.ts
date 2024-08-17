@@ -64,7 +64,10 @@ export async function createTrip(tripName: string): Promise<any> {
   );
 }
 
-export async function renameTrip(): Promise<any> {
+export async function renameTrip(
+  targetTrip: string,
+  newTripName: string
+): Promise<any> {
   const tripsRef = collection(firestore, "trips");
   const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
   const q1Snapshot = await getDocs(q1);
@@ -74,7 +77,7 @@ export async function renameTrip(): Promise<any> {
     q1Snapshot.docs[0].id,
     "userTrips"
   );
-  const q2 = query(userTripsRef, where("title", "==", "沖縄旅行"));
+  const q2 = query(userTripsRef, where("title", "==", targetTrip));
   const q2Snapshot = await getDocs(q2);
   await setDoc(
     doc(
@@ -84,7 +87,7 @@ export async function renameTrip(): Promise<any> {
       "userTrips",
       q2Snapshot.docs[0].id
     ),
-    { title: "入力した旅行名" }
+    { title: newTripName }
   );
 }
 

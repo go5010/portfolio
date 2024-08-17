@@ -36,13 +36,6 @@ export default function Home() {
     // renameTrip();
     // addDay();
     // deleteTrip();
-    let testArr;
-    const testfunc = async () => {
-      testArr = await createTripListArr();
-      console.log(testArr);
-    };
-    testfunc();
-    console.log(testArr);
   }, []);
   return (
     <div className="">
