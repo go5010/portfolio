@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
@@ -17,54 +17,23 @@ type userTripType = { id: string; title: string; schedules: schedulesType };
 
 const ScheduleSidebar = () => {
   const users = { id: "userxxxxx", name: "Gota Arai", email: "xxx@gmail.com" };
-  let userTrip!: userTripType[];
-  let [tripOpen, setTripOpen] = useState<
+  const [userTrip, setUserTrip] = useState<userTripType[]>([]);
+  const [tripOpen, setTripOpen] = useState<
     { tripNo: number; open: boolean }[] | undefined
   >();
-  async () => {
-    userTrip = await createTripListArr();
-    setTripOpen(
-      userTrip.map((trip, index) => {
-        return { tripNo: index + 1, open: false };
-      })
-    );
-  };
-  // const userTrip = [
-  //   {
-  //     id: "trip11111",
-  //     title: "旅行1",
-  //     schedules: [
-  //       [
-  //         {
-  //           title: "spot1",
-  //           memo: "写真を撮る",
-  //           location: { lat: 135, lng: 40 },
-  //         },
-  //       ],
-  //       [{ title: "spot2", memo: "~~食べる", location: { lat: 136, lng: 41 } }],
-  //     ],
-  //   },
-  //   {
-  //     id: "trip22222",
-  //     title: "旅行2",
-  //     schedules: [
-  //       [
-  //         {
-  //           title: "spot3",
-  //           memo: "写真を撮る",
-  //           location: { lat: 137, lng: 40 },
-  //         },
-  //       ],
-  //       [{ title: "spot4", memo: "~~食べる", location: { lat: 134, lng: 41 } }],
-  //     ],
-  //   },
-  // ];
 
-  // const [tripOpen, setTripOpen] = useState(
-  //   userTrip.map((trip, index) => {
-  //     return { tripNo: index + 1, open: false };
-  //   })
-  // );
+  useEffect(() => {
+    const fetchTrips = async () => {
+      const trips: userTripType[] = await createTripListArr();
+      setUserTrip(trips);
+      setTripOpen(
+        trips.map((_, index) => {
+          return { tripNo: index + 1, open: false };
+        })
+      );
+    };
+    fetchTrips();
+  }, []);
 
   const handleTripClick = (clickedIndex: number) => {
     setTripOpen(
@@ -110,6 +79,10 @@ const ScheduleSidebar = () => {
   const handleDayEditClose = () => {
     setDayAnchorEl(null);
   };
+
+  if (!userTrip.length) {
+    return <div>Loading...</div>; //ローディング表示
+  }
 
   return (
     <div className="h-[1000px] w-[250px] bg-slate-100 border-r-2">

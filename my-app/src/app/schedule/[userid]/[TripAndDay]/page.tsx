@@ -1,92 +1,79 @@
 "use client";
 
 import ScheduleSidebar from "@/components/organism/ScheduleSidebar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Candidates from "./Candidates";
 import { SearchArea } from "./SearchArea";
 import { usePathname } from "next/navigation";
+import { createTripListArr } from "@/app/_api/db";
+
+type schedulesType = {
+  title: string;
+  memo: string;
+  location: { lat: number; lng: number };
+}[][];
+type userTripType = { id: string; title: string; schedules: schedulesType };
+type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 
 const Schedule = () => {
   const [candiOrSearch, setCandiOrSeacrch] = useState("candidates");
   const pathname = usePathname();
   const users = { id: "userxxxxx", name: "Gota Arai", email: "xxx@gmail.com" };
-  const userTrip = [
-    {
-      id: "trip11111",
-      title: "旅行1",
-      schedules: [
-        [
-          {
-            title: "spot1",
-            memo: "写真を撮る",
-            location: { lat: 135, lng: 40 },
-          },
-          { title: "spot2", memo: "~~食べる", location: { lat: 136, lng: 41 } },
-        ],
-        [
-          {
-            title: "spot3",
-            memo: "写真を撮る",
-            location: { lat: 135, lng: 40 },
-          },
-          { title: "spot4", memo: "~~食べる", location: { lat: 136, lng: 41 } },
-        ],
-      ],
-    },
-    {
-      id: "trip22222",
-      title: "旅行2",
-      schedules: [
-        [
-          {
-            title: "spot5",
-            memo: "写真を撮る",
-            location: { lat: 137, lng: 40 },
-          },
-          { title: "spot6", memo: "~~食べる", location: { lat: 134, lng: 41 } },
-        ],
-        [
-          {
-            title: "spot5",
-            memo: "写真を撮る",
-            location: { lat: 137, lng: 40 },
-          },
-          { title: "spot8", memo: "~~食べる", location: { lat: 134, lng: 41 } },
-        ],
-      ],
-    },
-  ];
+  const [userTrip, setUserTrip] = useState<userTripType[]>([]);
+  const [urlTripID, setUrlTripID] = useState<string | null>(null);
+  const [urlTripDay, setUrlTripDay] = useState<number | null>(null);
+  const [userTripTitle, setUserTripTitle] = useState<string | null>(null);
+  const [cardOpen, setCardOpen] = useState<CardOpenType>([]);
 
-  function escapeRegExp(string: string) {
-    return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
+  useEffect(() => {
+    const fetchTrips = async () => {
+      const trips: userTripType[] = await createTripListArr();
+
+      function escapeRegExp(string: string) {
+        return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
+      }
+      const re = new RegExp(
+        `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
+      );
+      const urlTripIDTemp = pathname.match(re);
+      setUrlTripID(urlTripIDTemp![1]);
+      const urlTripDayTemp = pathname.match(/Day(.*)/);
+      setUrlTripDay(Number(urlTripDayTemp![1]));
+      setUserTripTitle(
+        trips.find((trip) => {
+          return trip.id === urlTripIDTemp![1];
+        })!.title
+      );
+      setCardOpen(
+        trips
+          .find((trip) => {
+            return trip.id === urlTripIDTemp![1];
+          })!
+          .schedules[Number(urlTripDayTemp![1]) - 1].map((_, index) => {
+            return { spotNo: index + 1, open: false };
+          })
+      );
+
+      setUserTrip(trips);
+    };
+    fetchTrips();
+  }, []);
+
+  if (
+    !userTrip.length ||
+    userTripTitle === null ||
+    urlTripDay === null ||
+    urlTripID === null
+  ) {
+    return <div>Loading...</div>; //ローディング表示
   }
-  const re = new RegExp(
-    `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
-  );
-  const urlTripIDTemp = pathname.match(re);
-  const urlTripID = urlTripIDTemp![1];
-  const urlTripDayTemp = pathname.match(/Day(.*)/);
-  const urlTripDay = Number(urlTripDayTemp![1]);
-  const userTripTitle = userTrip.find((trip) => {
-    return trip.id === urlTripID;
-  })!.title;
-
-  const [cardOpen, setCardOpen] = useState(
-    userTrip
-      .find((trip) => {
-        return trip.id === urlTripID;
-      })!
-      .schedules[urlTripDay - 1].map((spot, index) => {
-        return { spotNo: index + 1, open: false };
-      })
-  );
 
   return (
     <div className="flex">
       <ScheduleSidebar />
       <div className="grow px-7 pt-6">
         <div className="mb-6 ml-2 font-extrabold xs:text-lg md:text-xl">
-          {userTripTitle}　{`>`}　{urlTripDay}日目
+          {userTripTitle!}　{`>`}　{urlTripDay!}日目
         </div>
         <div className="flex border-b-2 pb-1">
           <div
@@ -111,7 +98,13 @@ const Schedule = () => {
           </div>
         </div>
         {candiOrSearch === "candidates" ? (
-          <Candidates cardOpen={cardOpen} setCardOpen={setCardOpen} />
+          <Candidates
+            cardOpen={cardOpen}
+            setCardOpen={setCardOpen}
+            userTrip={userTrip}
+            urlTripDay={urlTripDay}
+            urlTripID={urlTripID}
+          />
         ) : (
           <SearchArea />
         )}

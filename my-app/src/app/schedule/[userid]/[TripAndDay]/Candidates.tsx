@@ -4,71 +4,22 @@ import Rating from "@mui/material/Rating";
 import { ImShrink2 } from "react-icons/im";
 import { usePathname } from "next/navigation";
 
-type CardOpenType = Array<{ spotNo: number; open: boolean }>;
+type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
+type schedulesType = {
+  title: string;
+  memo: string;
+  location: { lat: number; lng: number };
+}[][];
+type userTripType = { id: string; title: string; schedules: schedulesType };
 
 const Candidates: FC<{
   cardOpen: CardOpenType;
   setCardOpen: Dispatch<SetStateAction<CardOpenType>>;
-}> = ({ cardOpen, setCardOpen }) => {
+  userTrip: userTripType[];
+  urlTripDay: number;
+  urlTripID: string;
+}> = ({ cardOpen, setCardOpen, userTrip, urlTripDay, urlTripID }) => {
   const users = { id: "userxxxxx", name: "Gota Arai", email: "xxx@gmail.com" };
-  const userTrip = [
-    {
-      id: "trip11111",
-      title: "旅行1",
-      schedules: [
-        [
-          {
-            title: "spot1",
-            memo: "写真を撮る",
-            location: { lat: 135, lng: 40 },
-          },
-          { title: "spot2", memo: "~~食べる", location: { lat: 136, lng: 41 } },
-        ],
-        [
-          {
-            title: "spot3",
-            memo: "写真を撮る",
-            location: { lat: 135, lng: 40 },
-          },
-          { title: "spot4", memo: "~~食べる", location: { lat: 136, lng: 41 } },
-        ],
-      ],
-    },
-    {
-      id: "trip22222",
-      title: "旅行2",
-      schedules: [
-        [
-          {
-            title: "spot5",
-            memo: "写真を撮る",
-            location: { lat: 137, lng: 40 },
-          },
-          { title: "spot6", memo: "~~食べる", location: { lat: 134, lng: 41 } },
-        ],
-        [
-          {
-            title: "spot5",
-            memo: "写真を撮る",
-            location: { lat: 137, lng: 40 },
-          },
-          { title: "spot8", memo: "~~食べる", location: { lat: 134, lng: 41 } },
-        ],
-      ],
-    },
-  ];
-
-  const pathname = usePathname();
-  function escapeRegExp(string: string) {
-    return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
-  }
-  const re = new RegExp(
-    `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
-  );
-  const urlTripIDTemp = pathname.match(re);
-  const urlTripID = urlTripIDTemp![1];
-  const urlTripDayTemp = pathname.match(/Day(.*)/);
-  const urlTripDay = Number(urlTripDayTemp![1]);
 
   const handleCardClick = (clickedIndex: number) => {
     setCardOpen(
@@ -92,7 +43,7 @@ const Candidates: FC<{
     );
   };
 
-  const [targetSpot, setTargetSpot] = useState<number>();
+  const [targetSpot, setTargetSpot] = useState<number>(); //Googleマップのターゲットピン
 
   return (
     <div className="flex mt-5 px-3">
