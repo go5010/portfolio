@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
@@ -100,6 +100,8 @@ const ScheduleSidebar = () => {
   const handleDayEditClose = () => {
     setDayAnchorEl(null);
   };
+
+  const NewTripInputRef = useRef();
 
   if (!userTrip.length) {
     return <div>Loading...</div>; //ローディング表示
@@ -255,10 +257,14 @@ const ScheduleSidebar = () => {
         <NewTripInput
           newTripInput={newTripInput}
           setNewTripInput={setNewTripInput}
+          ref={NewTripInputRef}
         />
       )}
       <div className="pl-6">
-        <button className="mt-6 hover:bg-gray-200 w-full text-left">
+        <button
+          className="mt-6 hover:bg-gray-200 w-full text-left"
+          onClick={() => NewTripInputRef.current.handleNamingTrip()}
+        >
           ＋ 新規作成
         </button>
       </div>

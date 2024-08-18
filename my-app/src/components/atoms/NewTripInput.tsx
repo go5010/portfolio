@@ -1,17 +1,22 @@
 import React, {
   Dispatch,
   FC,
+  forwardRef,
   SetStateAction,
   useEffect,
+  useImperativeHandle,
   useRef,
   useState,
 } from "react";
 import { createTrip } from "@/app/_api/db";
 
-const NewTripInput: FC<{
-  newTripInput: boolean;
-  setNewTripInput: Dispatch<SetStateAction<boolean>>;
-}> = ({ newTripInput, setNewTripInput }) => {
+const NewTripInput = forwardRef<
+  void,
+  {
+    newTripInput: boolean;
+    setNewTripInput: Dispatch<SetStateAction<boolean>>;
+  }
+>(({ newTripInput, setNewTripInput }, ref) => {
   const [newTripName, setNewTripName] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewTripName(event.target.value);
@@ -42,10 +47,14 @@ const NewTripInput: FC<{
   const removeDocumentClickHandler = () => {
     document.removeEventListener("click", documentClickHandler.current as any);
   };
-  const handleNamingTrip = () => {
-    setNewTripInput(true);
-    document.addEventListener("click", documentClickHandler.current as any);
-  };
+
+  useImperativeHandle(ref, () => {
+    const handleNamingTrip = () => {
+      setNewTripInput(true);
+      document.addEventListener("click", documentClickHandler.current as any);
+    };
+  });
+
   if (!newTripInput) {
     // newTripName !== "" && createTrip(newTripName);
     newTripName !== "" && setNewTripName("");
@@ -60,6 +69,6 @@ const NewTripInput: FC<{
       ref={namingInput}
     />
   );
-};
+});
 
 export default NewTripInput;
