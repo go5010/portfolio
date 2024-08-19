@@ -1,8 +1,18 @@
+"use client";
+
 import Link from "next/link";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Rating from "@mui/material/Rating";
 import { ImShrink2 } from "react-icons/im";
 import { usePathname } from "next/navigation";
+import { Loader } from "@googlemaps/js-api-loader";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -11,7 +21,7 @@ type schedulesType = {
   location: { lat: number; lng: number };
 }[][];
 type userTripType = { id: string; title: string; schedules: schedulesType };
-// temp
+
 const Candidates: FC<{
   cardOpen: CardOpenType;
   setCardOpen: Dispatch<SetStateAction<CardOpenType>>;
@@ -42,6 +52,28 @@ const Candidates: FC<{
       })
     );
   };
+
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!;
+
+  useEffect(() => {
+    const loader = new Loader({
+      apiKey: API_KEY,
+      version: "weekly",
+    });
+
+    loader.load().then(async () => {
+      if (mapContainerRef.current) {
+        const { Map } = (await google.maps.importLibrary(
+          "maps"
+        )) as google.maps.MapsLibrary;
+        new Map(mapContainerRef.current, {
+          center: { lat: 35.6895, lng: 139.6917 },
+          zoom: 10,
+        });
+      }
+    });
+  }, []);
 
   const [targetSpot, setTargetSpot] = useState<number>(); //Googleマップのターゲットピン
 
@@ -104,7 +136,13 @@ const Candidates: FC<{
             );
           })}
       </div>
-      <div>google map, 移動時間検索</div>
+      <div>
+        <div
+          ref={mapContainerRef}
+          style={{ height: "400px", width: "400px" }}
+        />
+        <div>移動時間検索</div>
+      </div>
     </div>
   );
 };
