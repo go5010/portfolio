@@ -7,7 +7,6 @@ import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
 import { createTripListArr } from "@/app/_api/db";
-import NewTripInput from "../atoms/NewTripInput";
 
 type schedulesType = {
   title: string;
@@ -101,7 +100,45 @@ const ScheduleSidebar = () => {
     setDayAnchorEl(null);
   };
 
-  const NewTripInputRef = useRef();
+  const [newTripName, setNewTripName] = useState("");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTripName(event.target.value);
+  };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" || event.key === "Tab") {
+      setNewTripInput(false);
+      removeDocumentClickHandler();
+      // newTripName !== "" && createTrip(newTripName);
+      setNewTripName("");
+    } else if (event.key === "Escape") {
+      setNewTripInput(false);
+      removeDocumentClickHandler();
+      setNewTripName("");
+    }
+  };
+  const namingInput = useRef<HTMLInputElement>(null);
+  const documentClickHandler = useRef<(e: any) => void>();
+
+  useEffect(() => {
+    documentClickHandler.current = (e: any) => {
+      if (namingInput.current!.contains(e.target)) return;
+      setNewTripInput(false);
+      removeDocumentClickHandler();
+    };
+  }, []);
+  const removeDocumentClickHandler = () => {
+    document.removeEventListener("click", documentClickHandler.current as any);
+  };
+
+  const handleNamingTrip = () => {
+    setNewTripInput(true);
+    document.addEventListener("click", documentClickHandler.current as any);
+  };
+
+  if (!newTripInput) {
+    // newTripName !== "" && createTrip(newTripName);
+    newTripName !== "" && setNewTripName("");
+  }
 
   if (!userTrip.length) {
     return <div>Loading...</div>; //ローディング表示
@@ -254,16 +291,18 @@ const ScheduleSidebar = () => {
         );
       })}
       {newTripInput && (
-        <NewTripInput
-          newTripInput={newTripInput}
-          setNewTripInput={setNewTripInput}
-          ref={NewTripInputRef}
+        <input
+          className="ml-6 px-2 border focus:outline-none"
+          autoFocus={true}
+          onKeyDown={handleKeyDown}
+          onChange={handleChange}
+          ref={namingInput}
         />
       )}
       <div className="pl-6">
         <button
           className="mt-6 hover:bg-gray-200 w-full text-left"
-          onClick={() => NewTripInputRef.current.handleNamingTrip()}
+          onClick={() => handleNamingTrip()}
         >
           ＋ 新規作成
         </button>
