@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
-import { createTripListArr } from "@/app/_api/db";
+import { createTrip, createTripListArr } from "@/app/_api/db";
 
 type schedulesType = {
   title: string;
@@ -43,6 +43,22 @@ const ScheduleSidebar = () => {
     };
     fetchTrips();
   }, []);
+
+  const fetchTrips = async () => {
+    const trips: userTripType[] = await createTripListArr();
+    setUserTrip(trips);
+    setTripOpen(
+      trips.map((_, index) => {
+        return { tripNo: index + 1, open: false };
+      })
+    );
+    setInputmode(
+      trips.map((_, index) => {
+        return { tripNo: index + 1, input: false };
+      })
+    );
+    console.log("aaaaa");
+  };
 
   const handleTripClick = (clickedIndex: number) => {
     setTripOpen(
@@ -108,7 +124,8 @@ const ScheduleSidebar = () => {
     if (event.key === "Enter" || event.key === "Tab") {
       setNewTripInput(false);
       removeDocumentClickHandler();
-      // newTripName !== "" && createTrip(newTripName);
+      newTripName !== "" && createTrip(newTripName);
+      newTripName !== "" && fetchTrips();
       setNewTripName("");
     } else if (event.key === "Escape") {
       setNewTripInput(false);
@@ -136,8 +153,11 @@ const ScheduleSidebar = () => {
   };
 
   if (!newTripInput) {
-    // newTripName !== "" && createTrip(newTripName);
-    newTripName !== "" && setNewTripName("");
+    if (newTripName !== "") {
+      createTrip(newTripName);
+      fetchTrips();
+      setNewTripName("");
+    }
   }
 
   if (!userTrip.length) {
@@ -282,7 +302,10 @@ const ScheduleSidebar = () => {
               })}
             {tripOpen![index].open === true && (
               <div className="pl-4">
-                <button className="my-1 hover:bg-gray-200 w-full text-left">
+                <button
+                  className="my-1 hover:bg-gray-200 w-full text-left"
+                  onClick={() => console.log(index)}
+                >
                   ＋ 日程を追加
                 </button>
               </div>

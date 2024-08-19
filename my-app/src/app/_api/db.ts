@@ -44,8 +44,9 @@ export async function getTests(): Promise<any[] | null> {
 }
 
 export async function createTrip(tripName: string): Promise<any> {
+  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q = query(tripsRef, where("userID", "==", targetUser));
   const querySnapshot = await getDocs(q);
   const tripDoc = await addDoc(
     collection(firestore, "trips", querySnapshot.docs[0].id, "userTrips"),
@@ -68,8 +69,9 @@ export async function renameTrip(
   targetTrip: string,
   newTripName: string
 ): Promise<any> {
+  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -92,8 +94,9 @@ export async function renameTrip(
 }
 
 export async function addDay(): Promise<any> {
+  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -130,8 +133,9 @@ export async function addDay(): Promise<any> {
 
 // 本来は引数に日程(number)を渡す
 export async function deleteDay(): Promise<any> {
+  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -169,9 +173,10 @@ export async function deleteDay(): Promise<any> {
 }
 
 export async function deleteTrip(): Promise<any> {
+  const targetUser = "testuser";
   const delTargetTrip = "削除する旅行";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", "xxxxx"));
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
