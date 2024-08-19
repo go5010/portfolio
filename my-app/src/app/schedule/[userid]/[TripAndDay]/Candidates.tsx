@@ -11,7 +11,7 @@ type schedulesType = {
   location: { lat: number; lng: number };
 }[][];
 type userTripType = { id: string; title: string; schedules: schedulesType };
-
+// temp
 const Candidates: FC<{
   cardOpen: CardOpenType;
   setCardOpen: Dispatch<SetStateAction<CardOpenType>>;
