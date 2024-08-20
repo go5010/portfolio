@@ -93,7 +93,7 @@ export async function renameTrip(
   );
 }
 
-export async function addDay(): Promise<any> {
+export async function addDay(targetTripTitle: string): Promise<any> {
   const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
   const q1 = query(tripsRef, where("userID", "==", targetUser));
@@ -104,7 +104,7 @@ export async function addDay(): Promise<any> {
     q1Snapshot.docs[0].id,
     "userTrips"
   );
-  const q2 = query(userTripsRef, where("title", "==", "入力した旅行名"));
+  const q2 = query(userTripsRef, where("title", "==", targetTripTitle));
   const q2Snapshot = await getDocs(q2);
   const daysRef = collection(
     firestore,

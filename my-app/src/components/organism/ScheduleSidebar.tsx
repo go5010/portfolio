@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
-import { createTrip, createTripListArr } from "@/app/_api/db";
+import { addDay, createTrip, createTripListArr } from "@/app/_api/db";
 
 type schedulesType = {
   title: string;
@@ -57,7 +57,7 @@ const ScheduleSidebar = () => {
         return { tripNo: index + 1, input: false };
       })
     );
-    console.log("aaaaa");
+    console.log("!!!!!!!!!!!!!!!!!");
   };
 
   const handleTripClick = (clickedIndex: number) => {
@@ -304,7 +304,10 @@ const ScheduleSidebar = () => {
               <div className="pl-4">
                 <button
                   className="my-1 hover:bg-gray-200 w-full text-left"
-                  onClick={() => console.log(index)}
+                  onClick={() => {
+                    addDay(userTrip[index].title);
+                    fetchTrips();
+                  }}
                 >
                   ＋ 日程を追加
                 </button>
