@@ -18,6 +18,12 @@ import {
   getDoc,
 } from "firebase/firestore";
 
+type spotType = {
+  title: string;
+  memo: string;
+  location: { lat: number; lng: number };
+};
+
 export async function getTests(): Promise<any[] | null> {
   try {
     const ref = collection(firestore, "test");
@@ -230,7 +236,7 @@ export async function createTripListArr(): Promise<any> {
       userTrip.id,
       "days"
     );
-    const q3 = query(daysRef);
+    const q3 = query(daysRef, orderBy("day"));
     const q3Snapshot = await getDocs(q3);
     q3Snapshot.forEach((dayDoc) => {
       oneTripObj.schedules.push(dayDoc.data().schedules);
@@ -239,4 +245,43 @@ export async function createTripListArr(): Promise<any> {
   }
 
   return tripList;
+}
+
+export async function deleteSpot(
+  targetTripTitle: string,
+  targetDay: number,
+  targetSpotTitle: string
+): Promise<any> {
+  const targetUser = "testuser";
+  const tripsRef = collection(firestore, "trips");
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1Snapshot = await getDocs(q1);
+  const userTripsRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips"
+  );
+  const q2 = query(userTripsRef, where("title", "==", targetTripTitle));
+  const q2Snapshot = await getDocs(q2);
+  const daysRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips",
+    q2Snapshot.docs[0].id,
+    "days"
+  );
+  // 対象日程のdayドキュメントを取得
+  const q3 = query(daysRef, orderBy("day"));
+  const q3Snapshot = await getDocs(q3);
+  const targetDayDocRef = q3Snapshot.docs[targetDay - 1].ref;
+  // 書き換え先の配列を作成
+  const newSchedules = q3Snapshot.docs[targetDay - 1]
+    .data()
+    .schedules.filter((spot: spotType) => {
+      return spot.title !== targetSpotTitle;
+    });
+  // schedulesフィールドの書き換え
+  await updateDoc(targetDayDocRef, { schedules: newSchedules });
 }

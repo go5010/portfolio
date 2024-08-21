@@ -230,7 +230,7 @@ const ScheduleSidebar = () => {
               </Menu>
             </div>
             {tripOpen![index].open === true &&
-              trip.schedules.map((array, scheduleIndex) => {
+              trip.schedules.map((_, scheduleIndex) => {
                 return (
                   <div className="pl-4">
                     <div
@@ -291,7 +291,13 @@ const ScheduleSidebar = () => {
                           },
                         }}
                       >
-                        <MenuItem onClick={handleDayEditClose}>
+                        <MenuItem
+                          onClick={() => {
+                            handleDayEditClose;
+                            console.log(userTrip[index].title);
+                            console.log(scheduleIndex);
+                          }}
+                        >
                           <MdDeleteForever size={18} />
                           &nbsp;日程を削除
                         </MenuItem>

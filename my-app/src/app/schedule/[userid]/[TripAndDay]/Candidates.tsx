@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import React, {
   Dispatch,
   FC,
@@ -11,8 +10,12 @@ import React, {
 } from "react";
 import Rating from "@mui/material/Rating";
 import { ImShrink2 } from "react-icons/im";
-import { usePathname } from "next/navigation";
+import { MdDeleteForever } from "react-icons/md";
 import { Loader } from "@googlemaps/js-api-loader";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -51,6 +54,14 @@ const Candidates: FC<{
         return card;
       })
     );
+  };
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+  const handleDialogClose = () => {
+    setDialogOpen(false);
   };
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -128,6 +139,34 @@ const Candidates: FC<{
                   >
                     <ImShrink2 />
                   </button>
+                )}
+                {cardOpen![spotIndex].open === true && (
+                  <div>
+                    <button
+                      className=" p-1 rounded-md hover:bg-slate-200 absolute top-1 right-8"
+                      onClick={handleDialogOpen}
+                    >
+                      <MdDeleteForever />
+                    </button>
+                    <Dialog
+                      open={dialogOpen}
+                      onClose={handleDialogClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                    >
+                      <DialogTitle id="alert-dialog-title">
+                        {"候補スポットを削除しますか？"}
+                      </DialogTitle>
+                      <DialogActions>
+                        <Button onClick={handleDialogClose} autoFocus>
+                          キャンセル
+                        </Button>
+                        <Button onClick={handleDialogClose} color="error">
+                          削除
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
                 )}
                 {cardOpen![spotIndex].open === true && (
                   <textarea className="w-[calc(100%-40px)] border rounded-md py-1 px-2 outline-none resize-none absolute bottom-[30px] left-[20px]"></textarea>
