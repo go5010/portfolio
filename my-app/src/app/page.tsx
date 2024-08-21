@@ -11,6 +11,7 @@ import {
   createTrip,
   createTripListArr,
   deleteDay,
+  deleteSpot,
   deleteTrip,
   getTests,
   renameTrip,
@@ -36,6 +37,7 @@ export default function Home() {
     // renameTrip();
     // addDay();
     // deleteTrip();
+    deleteSpot("testtrip1", 2, "spot3");
   }, []);
   return (
     <div className="">
