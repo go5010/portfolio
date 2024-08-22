@@ -37,7 +37,8 @@ export default function Home() {
     // renameTrip();
     // addDay();
     // deleteTrip();
-    deleteSpot("testtrip1", 2, "spot3");
+    // deleteSpot("testtrip1", 2, "spot3");
+    // deleteDay("test6", 2);
   }, []);
   return (
     <div className="">
