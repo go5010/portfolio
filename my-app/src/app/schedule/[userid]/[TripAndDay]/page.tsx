@@ -59,6 +59,12 @@ const Schedule = () => {
     fetchTrips();
   }, []);
 
+  const fetchTrips = async () => {
+    const trips: userTripType[] = await createTripListArr();
+    setUserTrip(trips);
+    console.log("親コンポーネントが再レンダリング！");
+  };
+
   if (
     !userTrip.length ||
     userTripTitle === null ||
@@ -102,8 +108,11 @@ const Schedule = () => {
             cardOpen={cardOpen}
             setCardOpen={setCardOpen}
             userTrip={userTrip}
+            setUserTrip={setUserTrip}
             urlTripDay={urlTripDay}
             urlTripID={urlTripID}
+            userTripTitle={userTripTitle}
+            fetchTrips={fetchTrips}
           />
         ) : (
           <SearchArea />

@@ -16,6 +16,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import { deleteSpot } from "@/app/_api/db";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -29,9 +30,21 @@ const Candidates: FC<{
   cardOpen: CardOpenType;
   setCardOpen: Dispatch<SetStateAction<CardOpenType>>;
   userTrip: userTripType[];
+  setUserTrip: Dispatch<SetStateAction<userTripType[]>>;
   urlTripDay: number;
   urlTripID: string;
-}> = ({ cardOpen, setCardOpen, userTrip, urlTripDay, urlTripID }) => {
+  userTripTitle: string;
+  fetchTrips: () => Promise<void>;
+}> = ({
+  cardOpen,
+  setCardOpen,
+  userTrip,
+  setUserTrip,
+  urlTripDay,
+  urlTripID,
+  userTripTitle,
+  fetchTrips,
+}) => {
   const users = { id: "userxxxxx", name: "Gota Arai", email: "xxx@gmail.com" };
 
   const handleCardClick = (clickedIndex: number) => {
@@ -64,6 +77,13 @@ const Candidates: FC<{
     setDialogOpen(false);
   };
 
+  const updateCardOpen = (spotIndex: number) => {
+    const newCardOpen = cardOpen?.filter((_, spotIndex2) => {
+      return spotIndex2 !== spotIndex;
+    });
+    setCardOpen(newCardOpen);
+  };
+
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!;
 
@@ -87,6 +107,10 @@ const Candidates: FC<{
   }, []);
 
   const [targetSpot, setTargetSpot] = useState<number>(); //Googleマップのターゲットピン
+
+  if (!userTrip.length) {
+    return <div>Loading...</div>; //ローディング表示
+  }
 
   return (
     <div className="flex mt-5 px-3">
@@ -161,7 +185,16 @@ const Candidates: FC<{
                         <Button onClick={handleDialogClose} autoFocus>
                           キャンセル
                         </Button>
-                        <Button onClick={handleDialogClose} color="error">
+                        <Button
+                          onClick={() => {
+                            handleDialogClose();
+                            deleteSpot(userTripTitle, urlTripDay, spot.title);
+                            setUserTrip([]);
+                            fetchTrips();
+                            updateCardOpen(spotIndex);
+                          }}
+                          color="error"
+                        >
                           削除
                         </Button>
                       </DialogActions>
