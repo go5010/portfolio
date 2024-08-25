@@ -23,8 +23,11 @@ const ScheduleSidebar = () => {
   >();
   const [inputmode, setInputmode] = useState<
     { tripNo: number; input: boolean }[] | undefined
-  >();
-  const [newTripInput, setNewTripInput] = useState<boolean>(false);
+  >(); //名前の変更input
+
+  // 名前の変更input
+  const renameInput = useRef<HTMLInputElement>(null);
+  const documentClickHandler = useRef<(e: any) => void>();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -40,6 +43,17 @@ const ScheduleSidebar = () => {
           return { tripNo: index + 1, input: false };
         })
       );
+      // 名前の変更input,click動作
+      documentClickHandler.current = (e: any) => {
+        console.log("documentClickHandlerが動いた！");
+        if (renameInput.current!.contains(e.target)) return;
+        setInputmode(
+          trips!.map((_, index) => {
+            return { tripNo: index + 1, input: false };
+          })
+        );
+        removeDocumentClickHandler();
+      };
     };
     fetchTrips();
   }, []);
@@ -87,14 +101,24 @@ const ScheduleSidebar = () => {
     urlTripDay = Number(urlTripDayTemp![1]);
   }
 
-  const [tripAnchorEl, setTripAnchorEl] = useState<null | HTMLElement>(null);
-  const tripEditOpen = Boolean(tripAnchorEl);
-  const handleTripEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setTripAnchorEl(event.currentTarget);
+  //名前の変更・旅行の削除MENU
+  const [tripAnchorEls, setTripAnchorEls] = useState<(null | HTMLElement)[]>(
+    []
+  );
+  const handleTripEditClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    const newAnchorEls = [...tripAnchorEls];
+    newAnchorEls[index] = event.currentTarget;
+    setTripAnchorEls(newAnchorEls);
   };
-  const handleTripEditClose = () => {
-    setTripAnchorEl(null);
+  const handleTripEditClose = (index: number) => {
+    const newAnchorEls = [...tripAnchorEls];
+    newAnchorEls[index] = null;
+    setTripAnchorEls(newAnchorEls);
   };
+  // 名前の変更input
   const handleRenameTrip = (clickedIndex: number) => {
     setInputmode(
       inputmode!.map((trip, index) => {
@@ -104,9 +128,48 @@ const ScheduleSidebar = () => {
         return trip;
       })
     );
-    setTripAnchorEl(null);
+    handleTripEditClose(clickedIndex);
+    document.addEventListener("click", documentClickHandler.current as any);
+  };
+  const [renamedTripName, setRenamedTripName] = useState("");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRenamedTripName(event.target.value);
+  };
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (event.key === "Enter" || event.key === "Tab") {
+      console.log("handleKeyDownが動いた！");
+      const newAnchorEls = [...tripAnchorEls];
+      newAnchorEls[index] = null;
+      setTripAnchorEls(newAnchorEls);
+      removeDocumentClickHandler();
+      // renamedTripName !== "" && createTrip(renamedTripName);
+      // renamedTripName !== "" && fetchTrips();
+      setRenamedTripName("");
+    } else if (event.key === "Escape") {
+      const newAnchorEls = [...tripAnchorEls];
+      newAnchorEls[index] = null;
+      setTripAnchorEls(newAnchorEls);
+      removeDocumentClickHandler();
+      setRenamedTripName("");
+    }
   };
 
+  const removeDocumentClickHandler = () => {
+    document.removeEventListener("click", documentClickHandler.current as any);
+  };
+  // クリックでinput閉じた際の旅行名変更
+  // if (!newTripInput) {
+  //   if (renamedTripName !== "") {
+  //     // createTrip(renamedTripName);
+  //     // fetchTrips();
+  //     setRenamedTripName("");
+  //   }
+  // }
+
+  // 日程の削除
   const [dayAnchorEl, setDayAnchorEl] = useState<null | HTMLElement>(null);
   const dayEditOpen = Boolean(dayAnchorEl);
   const handleDayEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -116,42 +179,42 @@ const ScheduleSidebar = () => {
     setDayAnchorEl(null);
   };
 
+  // 新規作成input
+  const [newTripInput, setNewTripInput] = useState<boolean>(false);
   const [newTripName, setNewTripName] = useState("");
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewTripName(event.target.value);
   };
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown2 = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" || event.key === "Tab") {
       setNewTripInput(false);
-      removeDocumentClickHandler();
+      removeDocumentClickHandler2();
       newTripName !== "" && createTrip(newTripName);
       newTripName !== "" && fetchTrips();
       setNewTripName("");
     } else if (event.key === "Escape") {
       setNewTripInput(false);
-      removeDocumentClickHandler();
+      removeDocumentClickHandler2();
       setNewTripName("");
     }
   };
-  const namingInput = useRef<HTMLInputElement>(null);
-  const documentClickHandler = useRef<(e: any) => void>();
-
+  const namingNewTripInput = useRef<HTMLInputElement>(null);
+  const documentClickHandler2 = useRef<(e: any) => void>();
   useEffect(() => {
-    documentClickHandler.current = (e: any) => {
-      if (namingInput.current!.contains(e.target)) return;
+    documentClickHandler2.current = (e: any) => {
+      if (namingNewTripInput.current!.contains(e.target)) return;
       setNewTripInput(false);
-      removeDocumentClickHandler();
+      removeDocumentClickHandler2();
     };
   }, []);
-  const removeDocumentClickHandler = () => {
-    document.removeEventListener("click", documentClickHandler.current as any);
+  const removeDocumentClickHandler2 = () => {
+    document.removeEventListener("click", documentClickHandler2.current as any);
   };
-
-  const handleNamingTrip = () => {
+  const handleNamingNewTrip = () => {
     setNewTripInput(true);
-    document.addEventListener("click", documentClickHandler.current as any);
+    document.addEventListener("click", documentClickHandler2.current as any);
   };
-
+  // クリックでinput閉じた際の新規旅行データ作成
   if (!newTripInput) {
     if (newTripName !== "") {
       createTrip(newTripName);
@@ -178,18 +241,28 @@ const ScheduleSidebar = () => {
                 <div className="h-[24px] flex items-center mr-1.5">
                   {tripOpen![index].open ? <SlArrowDown /> : <SlArrowRight />}
                 </div>
-                {inputmode![index].input ? <input /> : <div>{trip.title}</div>}
+                {inputmode![index].input ? (
+                  <input
+                    className="px-2 border focus:outline-none"
+                    autoFocus={true}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    onChange={handleChange}
+                    ref={renameInput}
+                  />
+                ) : (
+                  <div>{trip.title}</div>
+                )}
               </button>
               <button
                 className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block"
-                onClick={handleTripEditClick}
+                onClick={(e) => handleTripEditClick(e, index)}
               >
                 …
               </button>
               <Menu
-                anchorEl={tripAnchorEl}
-                open={tripEditOpen}
-                onClose={handleTripEditClose}
+                anchorEl={tripAnchorEls[index]}
+                open={Boolean(tripAnchorEls[index])}
+                onClose={() => handleTripEditClose(index)}
                 MenuListProps={{
                   "aria-labelledby": "basic-button",
                 }}
@@ -197,7 +270,6 @@ const ScheduleSidebar = () => {
                   elevation: 0,
                   sx: {
                     overflow: "visible",
-                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                     "& .MuiAvatar-root": {
                       width: 32,
                       height: 32,
@@ -223,12 +295,13 @@ const ScheduleSidebar = () => {
                   <MdEdit size={18} />
                   &nbsp;名前を変更
                 </MenuItem>
-                <MenuItem onClick={handleTripEditClose}>
+                <MenuItem onClick={() => handleTripEditClose(index)}>
                   <MdDeleteForever size={18} />
                   &nbsp;旅行を削除
                 </MenuItem>
               </Menu>
             </div>
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             {tripOpen![index].open === true &&
               trip.schedules.map((_, scheduleIndex) => {
                 return (
@@ -326,19 +399,20 @@ const ScheduleSidebar = () => {
         <input
           className="ml-6 px-2 border focus:outline-none"
           autoFocus={true}
-          onKeyDown={handleKeyDown}
-          onChange={handleChange}
-          ref={namingInput}
+          onKeyDown={handleKeyDown2}
+          onChange={handleChange2}
+          ref={namingNewTripInput}
         />
       )}
       <div className="pl-6">
         <button
           className="mt-6 hover:bg-gray-200 w-full text-left"
-          onClick={() => handleNamingTrip()}
+          onClick={() => handleNamingNewTrip()}
         >
           ＋ 新規作成
         </button>
       </div>
+      <button onClick={() => handleRenameTrip(5)}>temp</button>
     </div>
   );
 };
