@@ -135,23 +135,25 @@ const ScheduleSidebar = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRenamedTripName(event.target.value);
   };
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" || event.key === "Tab") {
       console.log("handleKeyDownが動いた！");
-      const newAnchorEls = [...tripAnchorEls];
-      newAnchorEls[index] = null;
-      setTripAnchorEls(newAnchorEls);
+      setInputmode(
+        userTrip!.map((_, index) => {
+          return { tripNo: index + 1, input: false };
+        })
+      );
       removeDocumentClickHandler();
+      renamedTripName !== "" && console.log(renamedTripName);
       // renamedTripName !== "" && createTrip(renamedTripName);
       // renamedTripName !== "" && fetchTrips();
       setRenamedTripName("");
     } else if (event.key === "Escape") {
-      const newAnchorEls = [...tripAnchorEls];
-      newAnchorEls[index] = null;
-      setTripAnchorEls(newAnchorEls);
+      setInputmode(
+        userTrip!.map((_, index) => {
+          return { tripNo: index + 1, input: false };
+        })
+      );
       removeDocumentClickHandler();
       setRenamedTripName("");
     }
@@ -245,7 +247,7 @@ const ScheduleSidebar = () => {
                   <input
                     className="px-2 border focus:outline-none"
                     autoFocus={true}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
+                    onKeyDown={(e) => handleKeyDown(e)}
                     onChange={handleChange}
                     ref={renameInput}
                   />
@@ -253,6 +255,7 @@ const ScheduleSidebar = () => {
                   <div>{trip.title}</div>
                 )}
               </button>
+              <button onClick={() => handleRenameTrip(index)}>temp</button>
               <button
                 className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block"
                 onClick={(e) => handleTripEditClick(e, index)}
@@ -270,6 +273,7 @@ const ScheduleSidebar = () => {
                   elevation: 0,
                   sx: {
                     overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                     "& .MuiAvatar-root": {
                       width: 32,
                       height: 32,
@@ -301,7 +305,6 @@ const ScheduleSidebar = () => {
                 </MenuItem>
               </Menu>
             </div>
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             {tripOpen![index].open === true &&
               trip.schedules.map((_, scheduleIndex) => {
                 return (
@@ -412,7 +415,6 @@ const ScheduleSidebar = () => {
           ＋ 新規作成
         </button>
       </div>
-      <button onClick={() => handleRenameTrip(5)}>temp</button>
     </div>
   );
 };
