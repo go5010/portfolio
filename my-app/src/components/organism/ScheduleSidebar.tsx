@@ -44,6 +44,7 @@ const ScheduleSidebar = () => {
         })
       );
       // 名前の変更input,click動作
+      // ★★★★★
       documentClickHandler.current = (e: any) => {
         console.log("documentClickHandlerが動いた！");
         if (renameInput.current!.contains(e.target)) return;
@@ -54,6 +55,7 @@ const ScheduleSidebar = () => {
         );
         removeDocumentClickHandler();
       };
+      // ★★★★★
     };
     fetchTrips();
   }, []);
@@ -119,6 +121,7 @@ const ScheduleSidebar = () => {
     setTripAnchorEls(newAnchorEls);
   };
   // 名前の変更input
+  // ★★★★★
   const handleRenameTrip = (clickedIndex: number) => {
     setInputmode(
       inputmode!.map((trip, index) => {
@@ -131,6 +134,7 @@ const ScheduleSidebar = () => {
     handleTripEditClose(clickedIndex);
     document.addEventListener("click", documentClickHandler.current as any);
   };
+  // ★★★★★
   const [renamedTripName, setRenamedTripName] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRenamedTripName(event.target.value);
@@ -165,6 +169,7 @@ const ScheduleSidebar = () => {
   // クリックでinput閉じた際の旅行名変更
   // if (!newTripInput) {
   //   if (renamedTripName !== "") {
+  //        console.log(renamedTripName)
   //     // createTrip(renamedTripName);
   //     // fetchTrips();
   //     setRenamedTripName("");
@@ -255,7 +260,9 @@ const ScheduleSidebar = () => {
                   <div>{trip.title}</div>
                 )}
               </button>
-              <button onClick={() => handleRenameTrip(index)}>temp</button>
+              {/* ★★★★★ */}
+              <button onClick={() => handleRenameTrip(index)}>tmpbtn</button>
+              {/* ★★★★★ */}
               <button
                 className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block"
                 onClick={(e) => handleTripEditClick(e, index)}
@@ -295,10 +302,12 @@ const ScheduleSidebar = () => {
                   },
                 }}
               >
+                {/* ★★★★★ */}
                 <MenuItem onClick={() => handleRenameTrip(index)}>
                   <MdEdit size={18} />
                   &nbsp;名前を変更
                 </MenuItem>
+                {/* ★★★★★ */}
                 <MenuItem onClick={() => handleTripEditClose(index)}>
                   <MdDeleteForever size={18} />
                   &nbsp;旅行を削除
