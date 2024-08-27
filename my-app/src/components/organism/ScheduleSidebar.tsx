@@ -167,14 +167,17 @@ const ScheduleSidebar = () => {
     document.removeEventListener("click", documentClickHandler.current as any);
   };
   // クリックでinput閉じた際の旅行名変更
-  // if (!newTripInput) {
-  //   if (renamedTripName !== "") {
-  //        console.log(renamedTripName)
-  //     // createTrip(renamedTripName);
-  //     // fetchTrips();
-  //     setRenamedTripName("");
-  //   }
-  // }
+  if (
+    inputmode !== undefined &&
+    inputmode!.every((trip) => trip.input === false)
+  ) {
+    if (renamedTripName !== "") {
+      console.log(renamedTripName);
+      // createTrip(renamedTripName);
+      // fetchTrips();
+      setRenamedTripName("");
+    }
+  }
 
   // 日程の削除
   const [dayAnchorEl, setDayAnchorEl] = useState<null | HTMLElement>(null);
