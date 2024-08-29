@@ -92,15 +92,25 @@ const Candidates: FC<{
       apiKey: API_KEY,
       version: "weekly",
     });
-
+    let map;
     loader.load().then(async () => {
       if (mapContainerRef.current) {
+        const position = { lat: 35.6895, lng: 139.6917 };
         const { Map } = (await google.maps.importLibrary(
           "maps"
         )) as google.maps.MapsLibrary;
-        new Map(mapContainerRef.current, {
-          center: { lat: 35.6895, lng: 139.6917 },
+        const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+          "marker"
+        )) as google.maps.MarkerLibrary;
+        map = new Map(mapContainerRef.current, {
+          center: position,
           zoom: 10,
+          mapID: process.env.NEXT_PUBLIC_GOOGLE_MAP_ID,
+        });
+        new AdvancedMarkerElement({
+          map,
+          position: position,
+          title: "Uluru",
         });
       }
     });
