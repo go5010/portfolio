@@ -17,7 +17,13 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import { deleteSpot } from "@/app/_api/db";
-import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
+import {
+  APIProvider,
+  Map,
+  Marker,
+  AdvancedMarker,
+  Pin,
+} from "@vis.gl/react-google-maps";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -227,9 +233,16 @@ const Candidates: FC<{
             defaultZoom={10}
             gestureHandling={"greedy"}
             disableDefaultUI={true}
+            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
           >
-            <Marker position={{ lat: 35.6895, lng: 139.6917 }} />
-            <Marker position={{ lat: 35.5895, lng: 139.5917 }} />
+            <AdvancedMarker position={{ lat: 35.6895, lng: 139.6917 }} />
+            <AdvancedMarker position={{ lat: 35.5895, lng: 139.5917 }}>
+              <Pin
+                background={"#0f9d58"}
+                borderColor={"#006425"}
+                glyphColor={"#60d98f"}
+              />
+            </AdvancedMarker>
           </Map>
           <div>移動時間検索</div>
         </div>
