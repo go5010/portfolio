@@ -20,10 +20,10 @@ import { deleteSpot } from "@/app/_api/db";
 import {
   APIProvider,
   Map,
-  Marker,
   AdvancedMarker,
   Pin,
 } from "@vis.gl/react-google-maps";
+import MapMarker from "@/components/atoms/MapMarker";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -123,7 +123,7 @@ const Candidates: FC<{
   //   });
   // }, []);
 
-  const [targetSpot, setTargetSpot] = useState<number>(); //Googleマップのターゲットピン
+  const [targetSpot, setTargetSpot] = useState<number>(); //Googleマップのターゲットマーカー
 
   if (!userTrip.length) {
     return <div>Loading...</div>; //ローディング表示
@@ -235,14 +235,19 @@ const Candidates: FC<{
             disableDefaultUI={true}
             mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
           >
-            <AdvancedMarker position={{ lat: 35.6895, lng: 139.6917 }} />
-            <AdvancedMarker position={{ lat: 35.5895, lng: 139.5917 }}>
-              <Pin
-                background={"#0f9d58"}
-                borderColor={"#006425"}
-                glyphColor={"#60d98f"}
-              />
-            </AdvancedMarker>
+            {userTrip
+              .find((trip) => {
+                return trip.id === urlTripID;
+              })
+              ?.schedules[urlTripDay - 1].map((spot, spotIndex) => {
+                return (
+                  <MapMarker
+                    location={spot.location}
+                    spotIndex={spotIndex}
+                    targetSpot={targetSpot}
+                  />
+                );
+              })}
           </Map>
           <div>移動時間検索</div>
         </div>
