@@ -24,6 +24,7 @@ import {
   Pin,
 } from "@vis.gl/react-google-maps";
 import MapMarker from "@/components/atoms/MapMarker";
+import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -249,7 +250,11 @@ const Candidates: FC<{
                 );
               })}
           </Map>
-          <div>移動時間検索</div>
+          <TravelTimeSearch
+            userTrip={userTrip}
+            urlTripDay={urlTripDay}
+            urlTripID={urlTripID}
+          />
         </div>
       </div>
     </APIProvider>
