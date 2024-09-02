@@ -1,13 +1,6 @@
 "use client";
 
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import Rating from "@mui/material/Rating";
 import { ImShrink2 } from "react-icons/im";
 import { MdDeleteForever } from "react-icons/md";
@@ -17,14 +10,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import { deleteSpot } from "@/app/_api/db";
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  Pin,
-} from "@vis.gl/react-google-maps";
+import { APIProvider, Map, useMap } from "@vis.gl/react-google-maps";
 import MapMarker from "@/components/atoms/MapMarker";
 import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
+import Directions from "@/components/organism/Directions";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
