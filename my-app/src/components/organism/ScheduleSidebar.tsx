@@ -48,6 +48,7 @@ const ScheduleSidebar = () => {
       documentClickHandler.current = (e: any) => {
         console.log("documentClickHandlerが動いた！");
         if (renameInput.current!.contains(e.target)) return;
+        console.log(renameInput.current);
         setInputmode(
           trips!.map((_, index) => {
             return { tripNo: index + 1, input: false };

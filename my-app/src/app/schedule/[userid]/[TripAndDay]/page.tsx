@@ -6,6 +6,7 @@ import Candidates from "./Candidates";
 import { SearchArea } from "./SearchArea";
 import { usePathname } from "next/navigation";
 import { createTripListArr } from "@/app/_api/db";
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 type schedulesType = {
   title: string;
@@ -75,50 +76,52 @@ const Schedule = () => {
   }
 
   return (
-    <div className="flex">
-      <ScheduleSidebar />
-      <div className="grow px-7 pt-6">
-        <div className="mb-6 ml-2 font-extrabold xs:text-lg md:text-xl">
-          {userTripTitle!}　{`>`}　{urlTripDay!}日目
-        </div>
-        <div className="flex border-b-2 pb-1">
-          <div
-            onClick={() => setCandiOrSeacrch("candidates")}
-            className={
-              candiOrSearch === "candidates"
-                ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
-                : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
-            }
-          >
-            候補
+    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}>
+      <div className="flex">
+        <ScheduleSidebar />
+        <div className="grow px-7 pt-6">
+          <div className="mb-6 ml-2 font-extrabold xs:text-lg md:text-xl">
+            {userTripTitle!}　{`>`}　{urlTripDay!}日目
           </div>
-          <div
-            onClick={() => setCandiOrSeacrch("search")}
-            className={
-              candiOrSearch === "search"
-                ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
-                : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
-            }
-          >
-            検索
+          <div className="flex border-b-2 pb-1">
+            <div
+              onClick={() => setCandiOrSeacrch("candidates")}
+              className={
+                candiOrSearch === "candidates"
+                  ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
+                  : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
+              }
+            >
+              候補
+            </div>
+            <div
+              onClick={() => setCandiOrSeacrch("search")}
+              className={
+                candiOrSearch === "search"
+                  ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
+                  : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
+              }
+            >
+              検索
+            </div>
           </div>
+          {candiOrSearch === "candidates" ? (
+            <Candidates
+              cardOpen={cardOpen}
+              setCardOpen={setCardOpen}
+              userTrip={userTrip}
+              setUserTrip={setUserTrip}
+              urlTripDay={urlTripDay}
+              urlTripID={urlTripID}
+              userTripTitle={userTripTitle}
+              fetchTrips={fetchTrips}
+            />
+          ) : (
+            <SearchArea />
+          )}
         </div>
-        {candiOrSearch === "candidates" ? (
-          <Candidates
-            cardOpen={cardOpen}
-            setCardOpen={setCardOpen}
-            userTrip={userTrip}
-            setUserTrip={setUserTrip}
-            urlTripDay={urlTripDay}
-            urlTripID={urlTripID}
-            userTripTitle={userTripTitle}
-            fetchTrips={fetchTrips}
-          />
-        ) : (
-          <SearchArea />
-        )}
       </div>
-    </div>
+    </APIProvider>
   );
 };
 
