@@ -42,6 +42,16 @@ export const SearchArea = () => {
     newTripName !== "" && setNewTripName("");
   }
 
+  // function testfunc() {
+  //   console.log(this.index);
+  // }
+
+  // const testfunc = () => {
+  //   console.log(this);
+  // };
+
+  // document.addEventListener("click", { index: 3, handleEvent: testfunc });
+
   return (
     <>
       <div>SearchArea</div>

@@ -18,7 +18,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { deleteSpot } from "@/app/_api/db";
+import { deleteSpot, saveSpotMemo } from "@/app/_api/db";
 import { Map, useMap } from "@vis.gl/react-google-maps";
 import MapMarker from "@/components/atoms/MapMarker";
 import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
@@ -167,38 +167,27 @@ const Candidates: FC<{
     );
   };
 
-  // spotメモtextarea外をクリックしたらメモをfirestoreに登録
-  // const memoInputs = useRef<RefObject<HTMLTextAreaElement>[]>([]);
-  // userTrip
-  //   .find((trip) => {
-  //     return trip.id === urlTripID;
-  //   })
-  //   ?.schedules[urlTripDay - 1].forEach((_, index) => {
-  //     memoInputs.current[index] = createRef<HTMLTextAreaElement>();
-  //     console.log(memoInputs);
-  //     console.log(memoInputs.current[index]);
-  //     console.log(memoInputs.current[index].current);
-  //   });
-  // const documentClickHandler = useRef<(e: any, index: number) => void>();
-  // useEffect(() => {
-  //   documentClickHandler.current = (e: any, index: number) => {
-  //     console.log("spotメモのdocumentClickHandlerが動いた！");
-  //     if (memoInputs.current[index]!.current!.contains(e.target)) return;
-
-  //     // firestoreを書き換える関数
-  //     console.log("firestore書き換え関数の実行！");
-  //     document.removeEventListener(
-  //       "click",
-  //       documentClickHandler.current as any
-  //     );
-  //   };
-  // }, []);
-  // const handleEditMemo = (index: number) => {
-  //   document.addEventListener(
-  //     "click",
-  //     (e) => documentClickHandler.current!(e, index) as any
-  //   );
-  // };
+  // spotメモtextareaからfocusが外れたらメモをfirestoreに登録
+  const memoInputs = useRef<RefObject<HTMLTextAreaElement>[]>([]);
+  const handleBlur = (
+    index: number,
+    userTripTitle: string,
+    urlTripDay: number,
+    spottitle: string
+  ) => {
+    // メモが変更されたら
+    if (
+      userTrip
+        .find((trip) => {
+          return trip.id === urlTripID;
+        })
+        ?.schedules[urlTripDay - 1].find((_, spotIndex) => {
+          return index === spotIndex;
+        })?.memo !== spotMemo![index]
+    ) {
+      saveSpotMemo(userTripTitle, urlTripDay, spottitle, spotMemo![index]);
+    }
+  };
 
   if (!userTrip.length) {
     return <div>Loading...</div>; //ローディング表示
@@ -306,8 +295,15 @@ const Candidates: FC<{
                     onChange={(e) =>
                       handleChangeMemo(e.target.value, spotIndex)
                     }
-                    // onClick={() => handleEditMemo(spotIndex)}
-                    // ref={memoInputs.current[spotIndex].current}
+                    onBlur={() =>
+                      handleBlur(
+                        spotIndex,
+                        userTripTitle,
+                        urlTripDay,
+                        spot.title
+                      )
+                    }
+                    ref={memoInputs.current[spotIndex]}
                   >
                     {spotMemo![spotIndex]}
                   </textarea>

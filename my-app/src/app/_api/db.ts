@@ -286,3 +286,45 @@ export async function deleteSpot(
   // schedulesフィールドの書き換え
   await updateDoc(targetDayDocRef, { schedules: newSchedules });
 }
+
+export async function saveSpotMemo(
+  targetTripTitle: string,
+  targetDay: number,
+  targetSpotTitle: string,
+  newSpotMemo: string
+): Promise<any> {
+  const targetUser = "testuser";
+  const tripsRef = collection(firestore, "trips");
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1Snapshot = await getDocs(q1);
+  const userTripsRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips"
+  );
+  const q2 = query(userTripsRef, where("title", "==", targetTripTitle));
+  const q2Snapshot = await getDocs(q2);
+  const daysRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips",
+    q2Snapshot.docs[0].id,
+    "days"
+  );
+  // 対象日程のdayドキュメントを取得
+  const q3 = query(daysRef, orderBy("day"));
+  const q3Snapshot = await getDocs(q3);
+  const targetDayDocRef = q3Snapshot.docs[targetDay - 1].ref;
+  // 書き換え先の配列を作成
+  const newSchedules = q3Snapshot.docs[targetDay - 1]
+    .data()
+    .schedules.map((spot: spotType) => {
+      if (spot.title !== targetSpotTitle) return spot;
+      spot.memo = newSpotMemo;
+      return spot;
+    });
+  // schedulesフィールドの書き換え
+  await updateDoc(targetDayDocRef, { schedules: newSchedules });
+}
