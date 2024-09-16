@@ -24,6 +24,7 @@ const ScheduleSidebar = () => {
   const [inputmode, setInputmode] = useState<
     { tripNo: number; input: boolean }[] | undefined
   >(); //名前の変更input
+  console.log(inputmode);
 
   // 名前の変更input
   const renameInput = useRef<HTMLInputElement>(null);
@@ -124,6 +125,7 @@ const ScheduleSidebar = () => {
   // 名前の変更input
   // ★★★★★
   const handleRenameTrip = (clickedIndex: number) => {
+    console.log(inputmode, clickedIndex);
     setInputmode(
       inputmode!.map((trip, index) => {
         if (index === clickedIndex) {
@@ -133,7 +135,7 @@ const ScheduleSidebar = () => {
       })
     );
     handleTripEditClose(clickedIndex);
-    document.addEventListener("click", documentClickHandler.current as any);
+    // document.addEventListener("click", documentClickHandler.current as any);
   };
   // ★★★★★
   const [renamedTripName, setRenamedTripName] = useState("");

@@ -1,56 +1,158 @@
-import { createTrip } from "@/app/_api/db";
-import React, { useEffect, useRef, useState } from "react";
+import SearchResult from "@/components/organism/SearchResult";
+import { Map, useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
+import Image from "next/image";
+import React, { memo, useEffect, useState } from "react";
 
-export const SearchArea = () => {
-  const [inputmode, setInputmode] = useState(false);
-  const [newTripName, setNewTripName] = useState("");
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTripName(event.target.value);
+export const SearchArea = memo(() => {
+  const map = useMap();
+  const placesLib = useMapsLibrary("places");
+
+  const [searchResults, setSearchResults] = useState<any>([]);
+  const [detailsResults, setDetailsResults] = useState<any>([]);
+
+  const request = {
+    query: "東京スカイツリー",
+    fields: ["name", "rating", "geometry", "types", "place_id"],
   };
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" || event.key === "Tab") {
-      setInputmode(false);
-      removeDocumentClickHandler();
-      newTripName !== "" && createTrip(newTripName);
-      setNewTripName("");
-    } else if (event.key === "Escape") {
-      setInputmode(false);
-      removeDocumentClickHandler();
-      setNewTripName("");
-    }
+
+  const request2 = {
+    location: { lat: 35.92533750162224, lng: 139.48583982465075 },
+    radius: 7000,
+    type: "cafe",
   };
-  const namingInput = useRef<HTMLInputElement>(null);
-  const documentClickHandler = useRef<(e: any) => void>();
+
+  // useEffect(() => {
+  //   if (!placesLib || !map) return;
+
+  //   const svc = new placesLib.PlacesService(map);
+  //   svc.findPlaceFromQuery(request, (results, status) => {
+  //     console.log(results);
+
+  //     if (status == google.maps.places.PlacesServiceStatus.OK) {
+  //       const detailsReq = {
+  //         placeId: results![0].place_id,
+  //         fields: ["photos", "address_components", "opening_hours"],
+  //       };
+  //       const detailsCallback = (detailsRes: any, detailsSta: any) => {
+  //         if (detailsSta == google.maps.places.PlacesServiceStatus.OK) {
+  //           console.log(detailsRes);
+  //           setPhotoUrl(detailsRes.photos[0].getUrl());
+  //         }
+  //       };
+  //       // @ts-ignore
+  //       svc.getDetails(detailsReq, detailsCallback);
+  //     }
+  //   });
+  //   // svc.nearbySearch(request2, (results, status) => {
+  //   //   const results2 = results?.filter((result) => {
+  //   //     return result.vicinity?.includes("川越市");
+  //   //   });
+  //   //   console.log(results2);
+  //   // });
+  // }, [placesLib, map]);
+
+  // findPlaceSearch
+  const findPlaceSearch = () => {
+    if (!placesLib || !map) return;
+
+    const svc = new placesLib.PlacesService(map);
+    svc.findPlaceFromQuery(request, (results, status) => {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        setSearchResults(results);
+        const newDetailsResults = [...detailsResults];
+        results?.forEach((result) => {
+          const detailsReq = {
+            placeId: result.place_id,
+            fields: ["photos", "address_components", "opening_hours"],
+          };
+          const detailsCallback = (detailsRes: any, detailsSta: any) => {
+            if (detailsSta == google.maps.places.PlacesServiceStatus.OK) {
+              newDetailsResults.push(detailsRes);
+            }
+          };
+          // @ts-ignore
+          svc.getDetails(detailsReq, detailsCallback);
+        });
+        setDetailsResults(newDetailsResults);
+      }
+    });
+  };
+
+  // nearbySearch
+  const nearbySearch = () => {
+    if (!placesLib || !map) return;
+    console.log("nearbySearchが実行された！");
+
+    const svc = new placesLib.PlacesService(map);
+    const getDetailsPromise = (
+      request: google.maps.places.PlaceDetailsRequest
+    ): Promise<{
+      res: google.maps.places.PlaceResult | null;
+      status: google.maps.places.PlacesServiceStatus;
+    }> => {
+      return new Promise((resolve, reject) => {
+        svc.getDetails(request, (res, status) => {
+          resolve({ res, status });
+        });
+      });
+    };
+
+    svc.nearbySearch(request2, async (results, status) => {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        // 対象市区町村だけにフィルタリング
+        const newResults = results?.filter((result) => {
+          return result.vicinity?.includes("川越市");
+        });
+        const newSearchResults = newResults;
+        const newDetailsResults = [...detailsResults];
+
+        for (const result of newResults!) {
+          const detailsReq = {
+            placeId: result.place_id ?? "",
+            fields: ["photos", "address_components", "opening_hours"],
+          };
+          const detailsCallback = (detailsRes: any, detailsSta: any) => {
+            if (detailsSta == google.maps.places.PlacesServiceStatus.OK) {
+              const detailsResObj = {
+                photos: detailsRes.photos,
+                address_components: detailsRes.address_components,
+                opening_hours: detailsRes.opening_hours,
+              };
+              newDetailsResults.push(detailsResObj);
+            }
+          };
+          const { res, status } = await getDetailsPromise(detailsReq);
+          detailsCallback(res, status);
+        }
+        setSearchResults(newSearchResults);
+        setDetailsResults(newDetailsResults);
+        console.log("state更新された！");
+      }
+    });
+  };
 
   useEffect(() => {
-    documentClickHandler.current = (e: any) => {
-      if (namingInput.current!.contains(e.target)) return;
+    if (!placesLib || !map) return;
+    nearbySearch();
+  }, [placesLib, map]);
+  console.log(searchResults);
+  console.log(detailsResults);
 
-      setInputmode(false);
-      removeDocumentClickHandler();
-    };
-  }, []);
-  const removeDocumentClickHandler = () => {
-    document.removeEventListener("click", documentClickHandler.current as any);
-  };
-  const handleNamingTrip = () => {
-    setInputmode(true);
-    document.addEventListener("click", documentClickHandler.current as any);
-  };
-  if (!inputmode) {
-    newTripName !== "" && createTrip(newTripName);
-    newTripName !== "" && setNewTripName("");
+  if (!searchResults.length || !detailsResults.length) {
+    return (
+      <>
+        <div>loading...</div>{" "}
+        <Map
+          style={{ width: "0px", height: "0px" }}
+          defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
+          defaultZoom={10}
+          gestureHandling={"greedy"}
+          mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
+          disableDefaultUI={true}
+        />
+      </>
+    );
   }
-
-  // function testfunc() {
-  //   console.log(this.index);
-  // }
-
-  // const testfunc = () => {
-  //   console.log(this);
-  // };
-
-  // document.addEventListener("click", { index: 3, handleEvent: testfunc });
 
   return (
     <>
@@ -59,24 +161,24 @@ export const SearchArea = () => {
       <input className="border"></input>
       <input className="border"></input>
       <div className="h-[20px]"></div>
-      {inputmode ? (
-        <input
-          className="border px-2 py-1 focus:outline-none"
-          autoFocus={true}
-          onKeyDown={handleKeyDown}
-          onChange={handleChange}
-          ref={namingInput}
-        ></input>
-      ) : (
-        <span>仮のテキスト</span>
-      )}
+      {searchResults.map((result: any, index: number) => {
+        return (
+          <SearchResult
+            searchResult={result}
+            detailsResult={detailsResults[index]}
+          />
+        );
+      })}
 
-      <button
-        className="border rounded-md bg-slate-400 text-white p-2"
-        onClick={handleNamingTrip}
-      >
-        ボタン
-      </button>
+      {/* Places API実行用Map */}
+      <Map
+        style={{ width: "0px", height: "0px" }}
+        defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
+        defaultZoom={10}
+        gestureHandling={"greedy"}
+        disableDefaultUI={true}
+        mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
+      />
     </>
   );
-};
+});
