@@ -44,20 +44,6 @@ const ScheduleSidebar = () => {
           return { tripNo: index + 1, input: false };
         })
       );
-      // 名前の変更input,click動作
-      // ★★★★★
-      documentClickHandler.current = (e: any) => {
-        console.log("documentClickHandlerが動いた！");
-        if (renameInput.current!.contains(e.target)) return;
-        console.log(renameInput.current);
-        setInputmode(
-          trips!.map((_, index) => {
-            return { tripNo: index + 1, input: false };
-          })
-        );
-        removeDocumentClickHandler();
-      };
-      // ★★★★★
     };
     fetchTrips();
   }, []);
@@ -123,7 +109,6 @@ const ScheduleSidebar = () => {
     setTripAnchorEls(newAnchorEls);
   };
   // 名前の変更input
-  // ★★★★★
   const handleRenameTrip = (clickedIndex: number) => {
     console.log(inputmode, clickedIndex);
     setInputmode(
@@ -135,9 +120,7 @@ const ScheduleSidebar = () => {
       })
     );
     handleTripEditClose(clickedIndex);
-    // document.addEventListener("click", documentClickHandler.current as any);
   };
-  // ★★★★★
   const [renamedTripName, setRenamedTripName] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRenamedTripName(event.target.value);
@@ -164,6 +147,15 @@ const ScheduleSidebar = () => {
       removeDocumentClickHandler();
       setRenamedTripName("");
     }
+  };
+
+  // renameInputをクリックで閉じる
+  const handleClickOutOfReInput = (userTrip: userTripType[]) => {
+    setInputmode(
+      userTrip!.map((_, index) => {
+        return { tripNo: index + 1, input: false };
+      })
+    );
   };
 
   const removeDocumentClickHandler = () => {
@@ -247,6 +239,13 @@ const ScheduleSidebar = () => {
         return (
           <div className="pl-6" key={trip.id}>
             <div className="flex hover:bg-gray-200 group">
+              {/* rename input外div */}
+              {inputmode![index].input && (
+                <div
+                  className="w-screen h-screen fixed top-0 left-0 z-10 cursor-default"
+                  onClick={() => handleClickOutOfReInput(userTrip)}
+                ></div>
+              )}
               <button
                 onClick={() => handleTripClick(index)}
                 className="flex w-full "
@@ -256,7 +255,7 @@ const ScheduleSidebar = () => {
                 </div>
                 {inputmode![index].input ? (
                   <input
-                    className="px-2 border focus:outline-none"
+                    className="px-2 border focus:outline-none z-20"
                     autoFocus={true}
                     onKeyDown={(e) => handleKeyDown(e)}
                     onChange={handleChange}
@@ -266,15 +265,14 @@ const ScheduleSidebar = () => {
                   <div>{trip.title}</div>
                 )}
               </button>
-              {/* ★★★★★ */}
-              <button onClick={() => handleRenameTrip(index)}>tmpbtn</button>
-              {/* ★★★★★ */}
-              <button
-                className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block"
-                onClick={(e) => handleTripEditClick(e, index)}
-              >
-                …
-              </button>
+              {inputmode![index].input || (
+                <button
+                  className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block"
+                  onClick={(e) => handleTripEditClick(e, index)}
+                >
+                  …
+                </button>
+              )}
               <Menu
                 anchorEl={tripAnchorEls[index]}
                 open={Boolean(tripAnchorEls[index])}
@@ -308,12 +306,10 @@ const ScheduleSidebar = () => {
                   },
                 }}
               >
-                {/* ★★★★★ */}
                 <MenuItem onClick={() => handleRenameTrip(index)}>
                   <MdEdit size={18} />
                   &nbsp;名前を変更
                 </MenuItem>
-                {/* ★★★★★ */}
                 <MenuItem onClick={() => handleTripEditClose(index)}>
                   <MdDeleteForever size={18} />
                   &nbsp;旅行を削除
