@@ -193,31 +193,13 @@ const ScheduleSidebar = () => {
   const handleKeyDown2 = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" || event.key === "Tab") {
       setNewTripInput(false);
-      removeDocumentClickHandler2();
       newTripName !== "" && createTrip(newTripName);
       newTripName !== "" && fetchTrips();
       setNewTripName("");
     } else if (event.key === "Escape") {
       setNewTripInput(false);
-      removeDocumentClickHandler2();
       setNewTripName("");
     }
-  };
-  const namingNewTripInput = useRef<HTMLInputElement>(null);
-  const documentClickHandler2 = useRef<(e: any) => void>();
-  useEffect(() => {
-    documentClickHandler2.current = (e: any) => {
-      if (namingNewTripInput.current!.contains(e.target)) return;
-      setNewTripInput(false);
-      removeDocumentClickHandler2();
-    };
-  }, []);
-  const removeDocumentClickHandler2 = () => {
-    document.removeEventListener("click", documentClickHandler2.current as any);
-  };
-  const handleNamingNewTrip = () => {
-    setNewTripInput(true);
-    document.addEventListener("click", documentClickHandler2.current as any);
   };
   // クリックでinput閉じた際の新規旅行データ作成
   if (!newTripInput) {
@@ -410,18 +392,23 @@ const ScheduleSidebar = () => {
         );
       })}
       {newTripInput && (
-        <input
-          className="ml-6 px-2 border focus:outline-none"
-          autoFocus={true}
-          onKeyDown={handleKeyDown2}
-          onChange={handleChange2}
-          ref={namingNewTripInput}
-        />
+        <>
+          <input
+            className="ml-6 px-2 border focus:outline-none"
+            autoFocus={true}
+            onKeyDown={handleKeyDown2}
+            onChange={handleChange2}
+          />
+          <div
+            className="w-screen h-screen fixed top-0 left-0 z-10 cursor-default"
+            onClick={() => setNewTripInput(false)}
+          ></div>
+        </>
       )}
       <div className="pl-6">
         <button
           className="mt-6 hover:bg-gray-200 w-full text-left"
-          onClick={() => handleNamingNewTrip()}
+          onClick={() => setNewTripInput(true)}
         >
           ＋ 新規作成
         </button>
