@@ -81,7 +81,6 @@ export const SearchArea = memo(() => {
   // nearbySearch
   const nearbySearch = () => {
     if (!placesLib || !map) return;
-    console.log("nearbySearchが実行された！");
 
     const svc = new placesLib.PlacesService(map);
     const getDetailsPromise = (
@@ -126,7 +125,6 @@ export const SearchArea = memo(() => {
         }
         setSearchResults(newSearchResults);
         setDetailsResults(newDetailsResults);
-        console.log("state更新された！");
       }
     });
   };
@@ -135,8 +133,6 @@ export const SearchArea = memo(() => {
     if (!placesLib || !map) return;
     nearbySearch();
   }, [placesLib, map]);
-  console.log(searchResults);
-  console.log(detailsResults);
 
   if (!searchResults.length || !detailsResults.length) {
     return (

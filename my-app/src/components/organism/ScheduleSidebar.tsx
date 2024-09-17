@@ -6,7 +6,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
-import { addDay, createTrip, createTripListArr } from "@/app/_api/db";
+import {
+  addDay,
+  createTrip,
+  createTripListArr,
+  renameTrip,
+} from "@/app/_api/db";
 
 type schedulesType = {
   title: string;
@@ -24,7 +29,6 @@ const ScheduleSidebar = () => {
   const [inputmode, setInputmode] = useState<
     { tripNo: number; input: boolean }[] | undefined
   >(); //名前の変更input
-  console.log(inputmode);
 
   // 名前の変更input
   const renameInput = useRef<HTMLInputElement>(null);
@@ -109,8 +113,8 @@ const ScheduleSidebar = () => {
     setTripAnchorEls(newAnchorEls);
   };
   // 名前の変更input
-  const handleRenameTrip = (clickedIndex: number) => {
-    console.log(inputmode, clickedIndex);
+  const [TitleOfActiveInput, setTitleOfActiveInput] = useState("");
+  const handleRenameTrip = (clickedIndex: number, targetTripTitle: string) => {
     setInputmode(
       inputmode!.map((trip, index) => {
         if (index === clickedIndex) {
@@ -119,6 +123,7 @@ const ScheduleSidebar = () => {
         return trip;
       })
     );
+    setTitleOfActiveInput(targetTripTitle);
     handleTripEditClose(clickedIndex);
   };
   const [renamedTripName, setRenamedTripName] = useState("");
@@ -133,10 +138,8 @@ const ScheduleSidebar = () => {
           return { tripNo: index + 1, input: false };
         })
       );
-      removeDocumentClickHandler();
-      renamedTripName !== "" && console.log(renamedTripName);
-      // renamedTripName !== "" && createTrip(renamedTripName);
-      // renamedTripName !== "" && fetchTrips();
+      renamedTripName !== "" && renameTrip(TitleOfActiveInput, renamedTripName);
+      renamedTripName !== "" && fetchTrips();
       setRenamedTripName("");
     } else if (event.key === "Escape") {
       setInputmode(
@@ -144,7 +147,7 @@ const ScheduleSidebar = () => {
           return { tripNo: index + 1, input: false };
         })
       );
-      removeDocumentClickHandler();
+      setTitleOfActiveInput("");
       setRenamedTripName("");
     }
   };
@@ -157,19 +160,15 @@ const ScheduleSidebar = () => {
       })
     );
   };
-
-  const removeDocumentClickHandler = () => {
-    document.removeEventListener("click", documentClickHandler.current as any);
-  };
   // クリックでinput閉じた際の旅行名変更
   if (
     inputmode !== undefined &&
     inputmode!.every((trip) => trip.input === false)
   ) {
     if (renamedTripName !== "") {
-      console.log(renamedTripName);
-      // createTrip(renamedTripName);
-      // fetchTrips();
+      renameTrip(TitleOfActiveInput, renamedTripName);
+      fetchTrips();
+      setTitleOfActiveInput("");
       setRenamedTripName("");
     }
   }
@@ -288,7 +287,9 @@ const ScheduleSidebar = () => {
                   },
                 }}
               >
-                <MenuItem onClick={() => handleRenameTrip(index)}>
+                <MenuItem
+                  onClick={() => handleRenameTrip(index, userTrip[index].title)}
+                >
                   <MdEdit size={18} />
                   &nbsp;名前を変更
                 </MenuItem>
