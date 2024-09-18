@@ -14,7 +14,6 @@ import React, {
 import Rating from "@mui/material/Rating";
 import { ImShrink2 } from "react-icons/im";
 import { MdDeleteForever } from "react-icons/md";
-// import { Loader } from "@googlemaps/js-api-loader";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -94,38 +93,6 @@ const Candidates: FC<{
       });
       setCardOpen(newCardOpen);
     };
-
-    // const mapContainerRef = useRef<HTMLDivElement>(null);
-    // const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!;
-
-    // useEffect(() => {
-    //   const loader = new Loader({
-    //     apiKey: API_KEY,
-    //     version: "weekly",
-    //   });
-    //   let map;
-    //   loader.load().then(async () => {
-    //     if (mapContainerRef.current) {
-    //       const position = { lat: 35.6895, lng: 139.6917 };
-    //       const { Map } = (await google.maps.importLibrary(
-    //         "maps"
-    //       )) as google.maps.MapsLibrary;
-    //       const { AdvancedMarkerElement } = (await google.maps.importLibrary(
-    //         "marker"
-    //       )) as google.maps.MarkerLibrary;
-    //       map = new Map(mapContainerRef.current, {
-    //         center: position,
-    //         zoom: 10,
-    //         mapID: process.env.NEXT_PUBLIC_GOOGLE_MAP_ID,
-    //       });
-    //       new AdvancedMarkerElement({
-    //         map,
-    //         position: position,
-    //         title: "Uluru",
-    //       });
-    //     }
-    //   });
-    // }, []);
 
     const [targetSpot, setTargetSpot] = useState<number>(); //Googleマップのターゲットマーカー
 

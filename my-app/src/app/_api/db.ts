@@ -165,6 +165,7 @@ export async function deleteDay(
   const q3 = query(daysRef, orderBy("day", "desc"));
   const q3Snapshot = await getDocs(q3);
   const maxDay = q3Snapshot.docs[0].data().day;
+  console.log(targetTripTitle, targetDay);
   // 対象日程のドキュメントを削除
   const q4 = query(daysRef, where("day", "==", targetDay));
   const q4Snapshot = await getDocs(q4);
@@ -179,9 +180,9 @@ export async function deleteDay(
   }
 }
 
-export async function deleteTrip(): Promise<any> {
+export async function deleteTrip(targetTrip: string): Promise<any> {
   const targetUser = "testuser";
-  const delTargetTrip = "削除する旅行";
+  const delTargetTrip = targetTrip;
   const tripsRef = collection(firestore, "trips");
   const q1 = query(tripsRef, where("userID", "==", targetUser));
   const q1Snapshot = await getDocs(q1);

@@ -10,6 +10,8 @@ import {
   addDay,
   createTrip,
   createTripListArr,
+  deleteDay,
+  deleteTrip,
   renameTrip,
 } from "@/app/_api/db";
 
@@ -32,7 +34,6 @@ const ScheduleSidebar = () => {
 
   // 名前の変更input
   const renameInput = useRef<HTMLInputElement>(null);
-  const documentClickHandler = useRef<(e: any) => void>();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -79,6 +80,7 @@ const ScheduleSidebar = () => {
     );
   };
 
+  // 選択されている旅行のbg colorを黒くするための旅行ID・日程の取得
   const pathname = usePathname();
   function escapeRegExp(string: string) {
     return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
@@ -132,7 +134,6 @@ const ScheduleSidebar = () => {
   };
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" || event.key === "Tab") {
-      console.log("handleKeyDownが動いた！");
       setInputmode(
         userTrip!.map((_, index) => {
           return { tripNo: index + 1, input: false };
@@ -140,6 +141,7 @@ const ScheduleSidebar = () => {
       );
       renamedTripName !== "" && renameTrip(TitleOfActiveInput, renamedTripName);
       renamedTripName !== "" && fetchTrips();
+      setTitleOfActiveInput("");
       setRenamedTripName("");
     } else if (event.key === "Escape") {
       setInputmode(
@@ -173,14 +175,32 @@ const ScheduleSidebar = () => {
     }
   }
 
-  // 日程の削除
-  const [dayAnchorEl, setDayAnchorEl] = useState<null | HTMLElement>(null);
-  const dayEditOpen = Boolean(dayAnchorEl);
-  const handleDayEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setDayAnchorEl(event.currentTarget);
+  // 旅行の削除
+  const handleDeleteTrip = (clickedIndex: number, targetTripTitle: string) => {
+    deleteTrip(targetTripTitle);
+    handleTripEditClose(clickedIndex);
+    fetchTrips();
   };
-  const handleDayEditClose = () => {
-    setDayAnchorEl(null);
+
+  // 日程の削除
+  const [dayAnchorEls, setDayAnchorEls] = useState<(null | HTMLElement)[]>([]);
+  const handleDayEditClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    scheduleIndex: number
+  ) => {
+    const newDayAnchorEls = [...dayAnchorEls];
+    newDayAnchorEls[scheduleIndex] = event.currentTarget;
+    setDayAnchorEls(newDayAnchorEls);
+  };
+  const handleDayEditClose = (scheduleIndex: number) => {
+    const newDayAnchorEls = [...dayAnchorEls];
+    newDayAnchorEls[scheduleIndex] = null;
+    setDayAnchorEls(newDayAnchorEls);
+  };
+  const handleDeleteDay = (targetTripTitle: string, targetDay: number) => {
+    deleteDay(targetTripTitle, targetDay + 1);
+    fetchTrips();
+    handleDayEditClose(targetDay);
   };
 
   // 新規作成input
@@ -227,6 +247,7 @@ const ScheduleSidebar = () => {
                   onClick={() => handleClickOutOfReInput(userTrip)}
                 ></div>
               )}
+
               <button
                 onClick={() => handleTripClick(index)}
                 className="flex w-full "
@@ -293,7 +314,9 @@ const ScheduleSidebar = () => {
                   <MdEdit size={18} />
                   &nbsp;名前を変更
                 </MenuItem>
-                <MenuItem onClick={() => handleTripEditClose(index)}>
+                <MenuItem
+                  onClick={() => handleDeleteTrip(index, userTrip[index].title)}
+                >
                   <MdDeleteForever size={18} />
                   &nbsp;旅行を削除
                 </MenuItem>
@@ -324,14 +347,16 @@ const ScheduleSidebar = () => {
                       >{`・${scheduleIndex + 1}日目`}</Link>
                       <button
                         className="mr-2 px-1 rounded-md font-semibold hover:bg-gray-300 hidden group-hover:block"
-                        onClick={handleDayEditClick}
+                        onClick={(e) => {
+                          handleDayEditClick(e, scheduleIndex);
+                        }}
                       >
                         …
                       </button>
                       <Menu
-                        anchorEl={dayAnchorEl}
-                        open={dayEditOpen}
-                        onClose={handleDayEditClose}
+                        anchorEl={dayAnchorEls[scheduleIndex]}
+                        open={Boolean(dayAnchorEls[scheduleIndex])}
+                        onClose={() => handleDayEditClose(scheduleIndex)}
                         MenuListProps={{
                           "aria-labelledby": "basic-button",
                         }}
@@ -363,9 +388,10 @@ const ScheduleSidebar = () => {
                       >
                         <MenuItem
                           onClick={() => {
-                            handleDayEditClose;
-                            console.log(userTrip[index].title);
-                            console.log(scheduleIndex);
+                            handleDeleteDay(
+                              userTrip[index].title,
+                              scheduleIndex
+                            );
                           }}
                         >
                           <MdDeleteForever size={18} />
