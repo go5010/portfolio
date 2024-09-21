@@ -133,6 +133,7 @@ export const SearchArea = memo(() => {
     if (!placesLib || !map) return;
     nearbySearch();
   }, [placesLib, map]);
+  console.log(searchResults, detailsResults);
 
   if (!searchResults.length || !detailsResults.length) {
     return (

@@ -2,13 +2,40 @@ import { Rating } from "@mui/material";
 import Image from "next/image";
 import React, { FC, memo } from "react";
 import PrimaryButton from "../atoms/PrimaryButton";
+import { saveSpot } from "@/app/_api/db";
+import { usePathname } from "next/navigation";
 
 const SearchResult: FC<{ searchResult: any; detailsResult: any }> = memo(
   ({ searchResult, detailsResult }) => {
+    const users = {
+      id: "userxxxxx",
+      name: "Gota Arai",
+      email: "xxx@gmail.com",
+    };
+    const pathname = usePathname();
+    function escapeRegExp(string: string) {
+      return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
+    }
+    let urlTripID: any = null;
+    let urlTripDay: any = null;
+    if (pathname !== "/schedule" && pathname !== "/schedule/" + users.id) {
+      const re = new RegExp(
+        `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
+      );
+      const urlTripIDTemp = pathname.match(re);
+      urlTripID = urlTripIDTemp![1];
+      const urlTripDayTemp = pathname.match(/Day(.*)/);
+      urlTripDay = Number(urlTripDayTemp![1]);
+    }
+
     return (
       <div className="flex items-start border-t pt-4 mb-4">
         <div className="mt-3">
-          <PrimaryButton>候補に追加</PrimaryButton>
+          <PrimaryButton
+            onClickFunc={() => saveSpot(searchResult, detailsResult)}
+          >
+            候補に追加
+          </PrimaryButton>
         </div>
         <div className="flex ml-8">
           <div className="mr-4">

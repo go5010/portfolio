@@ -3,6 +3,7 @@
 // ディレクトリの_（アンダースコア）は，毎回読み込むことを防ぐ，アプリが軽くなる．page.tsxファイルがないディレクトリは全部アンダースコアをつけて良い？
 
 import { firestore } from "@/_firebase/firebaseConfig";
+import { rating } from "@material-tailwind/react";
 import {
   DocumentData,
   collection,
@@ -328,4 +329,80 @@ export async function saveSpotMemo(
     });
   // schedulesフィールドの書き換え
   await updateDoc(targetDayDocRef, { schedules: newSchedules });
+}
+
+export async function saveSpot(
+  targetTripID: string,
+  targetDay: number,
+  searchResult: any,
+  detailsResult: any
+): Promise<any> {
+  const targetUser = "testuser";
+  const tripsRef = collection(firestore, "trips");
+  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1Snapshot = await getDocs(q1);
+  const userTripsRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips"
+  );
+  const q2 = query(userTripsRef, where("title", "==", targetTripTitle));
+  const q2Snapshot = await getDocs(q2);
+  const daysRef = collection(
+    firestore,
+    "trips",
+    q1Snapshot.docs[0].id,
+    "userTrips",
+    q2Snapshot.docs[0].id,
+    "days"
+  );
+  // 対象日程のdayドキュメントを取得
+  const q3 = query(daysRef, orderBy("day"));
+  const q3Snapshot = await getDocs(q3);
+  const targetDayDocRef = q3Snapshot.docs[targetDay - 1].ref;
+  // 書き換え先の配列を作成
+  const newSchedules = [...q3Snapshot.docs[targetDay - 1].data().schedules];
+  console.log(newSchedules);
+  const newSpotObj = {
+    ...(searchResult.name && { title: searchResult.name }),
+    ...(detailsResult.photo[0] && { photo1: detailsResult.photo[0] }),
+    ...(detailsResult.photo[1] && { photo2: detailsResult.photo[1] }),
+    ...(detailsResult.photo[2] && { photo3: detailsResult.photo[2] }),
+    ...(detailsResult.photo[3] && { photo4: detailsResult.photo[3] }),
+    ...(searchResult.rating && { rating: searchResult.rating }),
+    ...(searchResult.vicinity && { address: searchResult.vicinity }),
+    ...(detailsResult.opening_hours && {
+      open_hours_mon: detailsResult.opening_hours.weekday_text[0],
+    }),
+    ...(detailsResult.opening_hours && {
+      open_hours_tue: detailsResult.opening_hours.weekday_text[1],
+    }),
+    ...(detailsResult.opening_hours && {
+      open_hours_wed: detailsResult.opening_hours.weekday_text[2],
+    }),
+    ...(detailsResult.opening_hours && {
+      open_hours_thu: detailsResult.opening_hours.weekday_text[3],
+    }),
+    ...(detailsResult.opening_hours && {
+      open_hours_fri: detailsResult.opening_hours.weekday_text[4],
+    }),
+    ...(detailsResult.opening_hours && {
+      open_hours_sat: detailsResult.opening_hours.weekday_text[5],
+    }),
+    ...(detailsResult.opening_hours && {
+      open_hours_sun: detailsResult.opening_hours.weekday_text[6],
+    }),
+    ...(searchResult.geometry && {
+      location: {
+        lat: searchResult.geometry.location.lat(),
+        lng: searchResult.geometry.location.lng(),
+      },
+    }),
+    memo: "",
+  };
+  newSchedules.push(newSpotObj);
+  // schedulesフィールドの書き換え
+  // await updateDoc(targetDayDocRef, { schedules: newSchedules });
+  console.log(newSchedules);
 }

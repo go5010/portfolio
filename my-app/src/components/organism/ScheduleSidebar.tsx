@@ -55,6 +55,7 @@ const ScheduleSidebar = () => {
 
   const fetchTrips = async () => {
     const trips: userTripType[] = await createTripListArr();
+    console.log(trips);
     setUserTrip(trips);
     setTripOpen(
       trips.map((_, index) => {
@@ -163,21 +164,29 @@ const ScheduleSidebar = () => {
     );
   };
   // クリックでinput閉じた際の旅行名変更
-  if (
-    inputmode !== undefined &&
-    inputmode!.every((trip) => trip.input === false)
-  ) {
-    if (renamedTripName !== "") {
-      renameTrip(TitleOfActiveInput, renamedTripName);
-      fetchTrips();
-      setTitleOfActiveInput("");
-      setRenamedTripName("");
-    }
-  }
+  useEffect(() => {
+    const renameTripByCloseInput = async () => {
+      if (
+        inputmode !== undefined &&
+        inputmode!.every((trip) => trip.input === false)
+      ) {
+        if (renamedTripName !== "") {
+          await renameTrip(TitleOfActiveInput, renamedTripName);
+          await fetchTrips();
+          setTitleOfActiveInput("");
+          setRenamedTripName("");
+        }
+      }
+    };
+    renameTripByCloseInput();
+  }, [inputmode]);
 
   // 旅行の削除
-  const handleDeleteTrip = (clickedIndex: number, targetTripTitle: string) => {
-    deleteTrip(targetTripTitle);
+  const handleDeleteTrip = async (
+    clickedIndex: number,
+    targetTripTitle: string
+  ) => {
+    await deleteTrip(targetTripTitle);
     handleTripEditClose(clickedIndex);
     fetchTrips();
   };
@@ -221,13 +230,18 @@ const ScheduleSidebar = () => {
     }
   };
   // クリックでinput閉じた際の新規旅行データ作成
-  if (!newTripInput) {
-    if (newTripName !== "") {
-      createTrip(newTripName);
-      fetchTrips();
-      setNewTripName("");
-    }
-  }
+  useEffect(() => {
+    const createTripByClick = async () => {
+      if (!newTripInput) {
+        if (newTripName !== "") {
+          createTrip(newTripName);
+          fetchTrips();
+          setNewTripName("");
+        }
+      }
+    };
+    createTripByClick();
+  }, [newTripInput]);
 
   if (!userTrip.length) {
     return <div>Loading...</div>; //ローディング表示
