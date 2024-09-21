@@ -6,9 +6,11 @@ import PrimaryButton from "@/components/atoms/PrimaryButton";
 import TemplateContainer from "@/components/atoms/TemplateContainer";
 import TitleText from "@/components/atoms/TitleText";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const CreateAccount = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -42,7 +44,10 @@ const CreateAccount = () => {
                 .then((userCredential) => {
                   // Signed in
                   const user = userCredential.user;
+                  alert("登録完了しました！");
+                  router.push("/");
                   console.log(user);
+
                   // ...
                 })
                 .catch((error) => {

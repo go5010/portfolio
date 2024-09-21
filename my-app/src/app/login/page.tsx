@@ -5,14 +5,13 @@ import BlueBulletText from "@/components/atoms/BlueBulletText";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import TemplateContainer from "@/components/atoms/TemplateContainer";
 import TitleText from "@/components/atoms/TitleText";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const Login = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -46,6 +45,7 @@ const Login = () => {
                 .then((userCredential) => {
                   // Signed in
                   const user = userCredential.user;
+                  router.push("/");
                   console.log(user);
                   // ...
                 })

@@ -1,16 +1,18 @@
 "use client";
 
+import { auth } from "@/_firebase/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   Dispatch,
   ReactNode,
   SetStateAction,
   createContext,
+  useEffect,
   useState,
 } from "react";
 
 type User = {
-  id: number;
-  name: string;
+  id: string;
   email: string;
 };
 
@@ -31,6 +33,23 @@ export const UserProvider = (props: { children: ReactNode }) => {
   //   email: "a",
   // });
   const [user, setUser] = useState<User | null>(null);
+
+  const value = { user };
+
+  useEffect(() => {
+    const unsubscribed = onAuthStateChanged(auth, (user) => {
+      console.log(user);
+      if (user) {
+        const loginUser = { id: user.uid, email: user.email! };
+        setUser(loginUser);
+      } else {
+        setUser(user);
+      }
+    });
+    return () => {
+      unsubscribed();
+    };
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

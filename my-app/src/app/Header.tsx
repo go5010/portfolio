@@ -8,6 +8,8 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 
 import { useLoginUser } from "@/hooks/useLoginUser";
 import Hamburger from "@/components/organism/Hamburger";
+import { signOut } from "firebase/auth";
+import { auth } from "@/_firebase/firebaseConfig";
 
 const Header = () => {
   const { user, setUser } = useLoginUser();
@@ -21,8 +23,8 @@ const Header = () => {
     setDialogOpen(false);
   };
   const handleLogout = () => {
-    setUser(null);
-    router.push("/");
+    signOut(auth);
+    router.push("/login");
   };
   return (
     <header className="py-5 px-5 sm:px-10 border-b-2 ">
