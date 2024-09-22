@@ -7,9 +7,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { deleteUser } from "firebase/auth";
+import { auth } from "@/_firebase/firebaseConfig";
+import { useRouter } from "next/navigation";
 
 const DeleteAccountWithDialog = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
   const handleDialogOpen = () => {
     setDialogOpen(true);
   };
@@ -39,7 +43,20 @@ const DeleteAccountWithDialog = () => {
           <Button onClick={handleDialogClose} autoFocus>
             キャンセル
           </Button>
-          <Button onClick={handleDialogClose} color="error">
+          <Button
+            onClick={() => {
+              handleDialogClose();
+              deleteUser(auth.currentUser!)
+                .then(() => {
+                  alert("アカウントを削除しました．");
+                  router.push("/");
+                })
+                .catch(() => {
+                  alert("失敗しました．");
+                });
+            }}
+            color="error"
+          >
             削除
           </Button>
         </DialogActions>

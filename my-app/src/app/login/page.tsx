@@ -45,7 +45,7 @@ const Login = () => {
                 .then((userCredential) => {
                   // Signed in
                   const user = userCredential.user;
-                  router.push("/");
+                  router.push(`/schedule/${user.uid}`);
                   console.log(user);
                   // ...
                 })

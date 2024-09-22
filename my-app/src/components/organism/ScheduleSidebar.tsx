@@ -428,9 +428,9 @@ const ScheduleSidebar = memo(() => {
               <div className="pl-4">
                 <button
                   className="my-1 hover:bg-gray-200 w-full text-left"
-                  onClick={() => {
-                    addDay(loginUser!.uid, userTrip[index].title);
-                    fetchTrips();
+                  onClick={async () => {
+                    await addDay(loginUser!.uid, userTrip[index].title);
+                    await fetchTrips();
                   }}
                 >
                   ＋ 日程を追加
