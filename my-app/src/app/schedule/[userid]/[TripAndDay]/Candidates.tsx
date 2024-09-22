@@ -7,6 +7,7 @@ import React, {
   memo,
   RefObject,
   SetStateAction,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -22,6 +23,7 @@ import { deleteSpot, saveSpotMemo } from "@/app/_api/db";
 import { Map, useMap } from "@vis.gl/react-google-maps";
 import MapMarker from "@/components/atoms/MapMarker";
 import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
+import { UserContext } from "@/providers/UserProvider";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -51,11 +53,7 @@ const Candidates: FC<{
     userTripTitle,
     fetchTrips,
   }) => {
-    const users = {
-      id: "userxxxxx",
-      name: "Gota Arai",
-      email: "xxx@gmail.com",
-    };
+    const loginUser = useContext(UserContext).user;
 
     const handleCardClick = (clickedIndex: number) => {
       setCardOpen(
@@ -158,7 +156,13 @@ const Candidates: FC<{
             return index === spotIndex;
           })?.memo !== spotMemo![index]
       ) {
-        saveSpotMemo(userTripTitle, urlTripDay, spottitle, spotMemo![index]);
+        saveSpotMemo(
+          loginUser!.uid,
+          userTripTitle,
+          urlTripDay,
+          spottitle,
+          spotMemo![index]
+        );
       }
     };
 
@@ -247,7 +251,12 @@ const Candidates: FC<{
                           <Button
                             onClick={() => {
                               handleDialogClose();
-                              deleteSpot(userTripTitle, urlTripDay, spot.title);
+                              deleteSpot(
+                                loginUser!.uid,
+                                userTripTitle,
+                                urlTripDay,
+                                spot.title
+                              );
                               setUserTrip([]);
                               fetchTrips();
                               updateCardOpen(spotIndex);

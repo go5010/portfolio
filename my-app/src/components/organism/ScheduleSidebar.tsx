@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Menu, MenuItem } from "@mui/material";
@@ -14,6 +14,7 @@ import {
   deleteTrip,
   renameTrip,
 } from "@/app/_api/db";
+import { UserContext } from "@/providers/UserProvider";
 
 type schedulesType = {
   title: string;
@@ -22,8 +23,9 @@ type schedulesType = {
 }[][];
 type userTripType = { id: string; title: string; schedules: schedulesType };
 
-const ScheduleSidebar = () => {
-  const users = { id: "userxxxxx", name: "Gota Arai", email: "xxx@gmail.com" };
+const ScheduleSidebar = memo(() => {
+  const loginLoading = useContext(UserContext).loginLoading;
+  const loginUser = useContext(UserContext).user;
   const [userTrip, setUserTrip] = useState<userTripType[]>([]);
   const [tripOpen, setTripOpen] = useState<
     { tripNo: number; open: boolean }[] | undefined
@@ -31,13 +33,35 @@ const ScheduleSidebar = () => {
   const [inputmode, setInputmode] = useState<
     { tripNo: number; input: boolean }[] | undefined
   >(); //名前の変更input
+  const [tripListLoading, setTripListLoading] = useState<boolean>(true); //マウント時のfetchTrip完了の判定
 
   // 名前の変更input
   const renameInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const fetchTrips = async () => {
-      const trips: userTripType[] = await createTripListArr();
+    if (!loginLoading) {
+      const fetchTrips = async () => {
+        const trips: userTripType[] = await createTripListArr(loginUser!.uid);
+        setUserTrip(trips);
+        setTripOpen(
+          trips.map((_, index) => {
+            return { tripNo: index + 1, open: false };
+          })
+        );
+        setInputmode(
+          trips.map((_, index) => {
+            return { tripNo: index + 1, input: false };
+          })
+        );
+        setTripListLoading(false);
+      };
+      fetchTrips();
+    }
+  }, [loginLoading]);
+
+  const fetchTrips = async () => {
+    if (!loginLoading) {
+      const trips: userTripType[] = await createTripListArr(loginUser!.uid);
       setUserTrip(trips);
       setTripOpen(
         trips.map((_, index) => {
@@ -49,25 +73,8 @@ const ScheduleSidebar = () => {
           return { tripNo: index + 1, input: false };
         })
       );
-    };
-    fetchTrips();
-  }, []);
-
-  const fetchTrips = async () => {
-    const trips: userTripType[] = await createTripListArr();
-    console.log(trips);
-    setUserTrip(trips);
-    setTripOpen(
-      trips.map((_, index) => {
-        return { tripNo: index + 1, open: false };
-      })
-    );
-    setInputmode(
-      trips.map((_, index) => {
-        return { tripNo: index + 1, input: false };
-      })
-    );
-    console.log("!!!!!!!!!!!!!!!!!");
+      console.log("!!!!!!!!!!!!!!!!!");
+    }
   };
 
   const handleTripClick = (clickedIndex: number) => {
@@ -88,15 +95,15 @@ const ScheduleSidebar = () => {
   }
   let urlTripID: any = null;
   let urlTripDay: any = null;
-  if (pathname !== "/schedule" && pathname !== "/schedule/" + users.id) {
-    const re = new RegExp(
-      `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
-    );
-    const urlTripIDTemp = pathname.match(re);
-    urlTripID = urlTripIDTemp![1];
-    const urlTripDayTemp = pathname.match(/Day(.*)/);
-    urlTripDay = Number(urlTripDayTemp![1]);
-  }
+  // if (pathname !== "/schedule" && pathname !== "/schedule/" + loginUser?.uid) {
+  //   const re = new RegExp(
+  //     `${escapeRegExp(loginUser?.uid + "/")}(.*)${escapeRegExp("-Day")}`
+  //   );
+  //   const urlTripIDTemp = pathname.match(re);
+  //   urlTripID = urlTripIDTemp![1];
+  //   const urlTripDayTemp = pathname.match(/Day(.*)/);
+  //   urlTripDay = Number(urlTripDayTemp![1]);
+  // }
 
   //名前の変更・旅行の削除MENU
   const [tripAnchorEls, setTripAnchorEls] = useState<(null | HTMLElement)[]>(
@@ -140,7 +147,8 @@ const ScheduleSidebar = () => {
           return { tripNo: index + 1, input: false };
         })
       );
-      renamedTripName !== "" && renameTrip(TitleOfActiveInput, renamedTripName);
+      renamedTripName !== "" &&
+        renameTrip(loginUser!.uid, TitleOfActiveInput, renamedTripName);
       renamedTripName !== "" && fetchTrips();
       setTitleOfActiveInput("");
       setRenamedTripName("");
@@ -171,7 +179,7 @@ const ScheduleSidebar = () => {
         inputmode!.every((trip) => trip.input === false)
       ) {
         if (renamedTripName !== "") {
-          await renameTrip(TitleOfActiveInput, renamedTripName);
+          await renameTrip(loginUser!.uid, TitleOfActiveInput, renamedTripName);
           await fetchTrips();
           setTitleOfActiveInput("");
           setRenamedTripName("");
@@ -186,7 +194,7 @@ const ScheduleSidebar = () => {
     clickedIndex: number,
     targetTripTitle: string
   ) => {
-    await deleteTrip(targetTripTitle);
+    await deleteTrip(loginUser!.uid, targetTripTitle);
     handleTripEditClose(clickedIndex);
     fetchTrips();
   };
@@ -207,7 +215,7 @@ const ScheduleSidebar = () => {
     setDayAnchorEls(newDayAnchorEls);
   };
   const handleDeleteDay = (targetTripTitle: string, targetDay: number) => {
-    deleteDay(targetTripTitle, targetDay + 1);
+    deleteDay(loginUser!.uid, targetTripTitle, targetDay + 1);
     fetchTrips();
     handleDayEditClose(targetDay);
   };
@@ -221,7 +229,7 @@ const ScheduleSidebar = () => {
   const handleKeyDown2 = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" || event.key === "Tab") {
       setNewTripInput(false);
-      newTripName !== "" && createTrip(newTripName);
+      newTripName !== "" && createTrip(loginUser!.uid, newTripName);
       newTripName !== "" && fetchTrips();
       setNewTripName("");
     } else if (event.key === "Escape") {
@@ -234,7 +242,7 @@ const ScheduleSidebar = () => {
     const createTripByClick = async () => {
       if (!newTripInput) {
         if (newTripName !== "") {
-          createTrip(newTripName);
+          createTrip(loginUser!.uid, newTripName);
           fetchTrips();
           setNewTripName("");
         }
@@ -243,7 +251,7 @@ const ScheduleSidebar = () => {
     createTripByClick();
   }, [newTripInput]);
 
-  if (!userTrip.length) {
+  if (tripListLoading) {
     return <div>Loading...</div>; //ローディング表示
   }
 
@@ -351,7 +359,7 @@ const ScheduleSidebar = () => {
                       <Link
                         href={
                           "/schedule/" +
-                          users.id +
+                          loginUser?.uid +
                           "/" +
                           userTrip[index].id +
                           "-Day" +
@@ -421,7 +429,7 @@ const ScheduleSidebar = () => {
                 <button
                   className="my-1 hover:bg-gray-200 w-full text-left"
                   onClick={() => {
-                    addDay(userTrip[index].title);
+                    addDay(loginUser!.uid, userTrip[index].title);
                     fetchTrips();
                   }}
                 >
@@ -456,6 +464,6 @@ const ScheduleSidebar = () => {
       </div>
     </div>
   );
-};
+});
 
 export default ScheduleSidebar;

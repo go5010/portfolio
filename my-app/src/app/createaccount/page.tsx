@@ -8,6 +8,7 @@ import TitleText from "@/components/atoms/TitleText";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { addUser } from "../_api/db";
 
 const CreateAccount = () => {
   const router = useRouter();
@@ -44,8 +45,9 @@ const CreateAccount = () => {
                 .then((userCredential) => {
                   // Signed in
                   const user = userCredential.user;
+                  addUser(user.uid);
+                  router.push(`/schedule/${user.uid}`);
                   alert("登録完了しました！");
-                  router.push("/");
                   console.log(user);
 
                   // ...

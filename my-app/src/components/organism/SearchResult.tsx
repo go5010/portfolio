@@ -1,26 +1,26 @@
 import { Rating } from "@mui/material";
 import Image from "next/image";
-import React, { FC, memo } from "react";
+import React, { FC, memo, useContext } from "react";
 import PrimaryButton from "../atoms/PrimaryButton";
 import { saveSpot } from "@/app/_api/db";
 import { usePathname } from "next/navigation";
+import { UserContext } from "@/providers/UserProvider";
 
 const SearchResult: FC<{ searchResult: any; detailsResult: any }> = memo(
   ({ searchResult, detailsResult }) => {
-    const users = {
-      id: "userxxxxx",
-      name: "Gota Arai",
-      email: "xxx@gmail.com",
-    };
+    const loginUser = useContext(UserContext).user;
     const pathname = usePathname();
     function escapeRegExp(string: string) {
       return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
     }
     let urlTripID: any = null;
     let urlTripDay: any = null;
-    if (pathname !== "/schedule" && pathname !== "/schedule/" + users.id) {
+    if (
+      pathname !== "/schedule" &&
+      pathname !== "/schedule/" + loginUser?.uid
+    ) {
       const re = new RegExp(
-        `${escapeRegExp(users.id + "/")}(.*)${escapeRegExp("-Day")}`
+        `${escapeRegExp(loginUser?.uid + "/")}(.*)${escapeRegExp("-Day")}`
       );
       const urlTripIDTemp = pathname.match(re);
       urlTripID = urlTripIDTemp![1];
@@ -32,7 +32,9 @@ const SearchResult: FC<{ searchResult: any; detailsResult: any }> = memo(
       <div className="flex items-start border-t pt-4 mb-4">
         <div className="mt-3">
           <PrimaryButton
-            onClickFunc={() => saveSpot(searchResult, detailsResult)}
+            onClickFunc={() =>
+              saveSpot(loginUser?.uid, searchResult, detailsResult)
+            }
           >
             候補に追加
           </PrimaryButton>

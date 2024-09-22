@@ -1,7 +1,9 @@
 "use client";
 
 import { auth } from "@/_firebase/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { set } from "firebase/database";
+
 import {
   Dispatch,
   ReactNode,
@@ -11,14 +13,10 @@ import {
   useState,
 } from "react";
 
-type User = {
-  id: string;
-  email: string;
-};
-
 export type UserContextType = {
   user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
+  loginLoading: boolean;
 };
 
 export const UserContext = createContext<UserContextType>(
@@ -27,24 +25,13 @@ export const UserContext = createContext<UserContextType>(
 
 export const UserProvider = (props: { children: ReactNode }) => {
   const { children } = props;
-  // const [user, setUser] = useState<User | null>({
-  //   id: 1,
-  //   name: "a",
-  //   email: "a",
-  // });
   const [user, setUser] = useState<User | null>(null);
-
-  const value = { user };
+  const [loginLoading, setLoginLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribed = onAuthStateChanged(auth, (user) => {
-      console.log(user);
-      if (user) {
-        const loginUser = { id: user.uid, email: user.email! };
-        setUser(loginUser);
-      } else {
-        setUser(user);
-      }
+      setUser(user);
+      setLoginLoading(false);
     });
     return () => {
       unsubscribed();
@@ -52,7 +39,7 @@ export const UserProvider = (props: { children: ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loginLoading }}>
       {children}
     </UserContext.Provider>
   );

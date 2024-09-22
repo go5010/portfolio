@@ -3,7 +3,8 @@
 // ディレクトリの_（アンダースコア）は，毎回読み込むことを防ぐ，アプリが軽くなる．page.tsxファイルがないディレクトリは全部アンダースコアをつけて良い？
 
 import { firestore } from "@/_firebase/firebaseConfig";
-import { rating } from "@material-tailwind/react";
+import { useLoginUser } from "@/hooks/useLoginUser";
+import { UserContext } from "@/providers/UserProvider";
 import {
   DocumentData,
   collection,
@@ -18,6 +19,7 @@ import {
   updateDoc,
   getDoc,
 } from "firebase/firestore";
+import { useContext } from "react";
 
 type spotType = {
   title: string;
@@ -50,10 +52,17 @@ export async function getTests(): Promise<any[] | null> {
   }
 }
 
-export async function createTrip(tripName: string): Promise<any> {
-  const targetUser = "testuser";
+// user新規登録
+export async function addUser(authUserID: string): Promise<any> {
+  await addDoc(collection(firestore, "trips"), { userID: authUserID });
+}
+
+export async function createTrip(
+  targetUserID: string,
+  tripName: string
+): Promise<any> {
   const tripsRef = collection(firestore, "trips");
-  const q = query(tripsRef, where("userID", "==", targetUser));
+  const q = query(tripsRef, where("userID", "==", targetUserID));
   const querySnapshot = await getDocs(q);
   const tripDoc = await addDoc(
     collection(firestore, "trips", querySnapshot.docs[0].id, "userTrips"),
@@ -73,12 +82,12 @@ export async function createTrip(tripName: string): Promise<any> {
 }
 
 export async function renameTrip(
+  targetUserID: string,
   targetTrip: string,
   newTripName: string
 ): Promise<any> {
-  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -100,10 +109,12 @@ export async function renameTrip(
   );
 }
 
-export async function addDay(targetTripTitle: string): Promise<any> {
-  const targetUser = "testuser";
+export async function addDay(
+  targetUserID: string,
+  targetTripTitle: string
+): Promise<any> {
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -139,12 +150,12 @@ export async function addDay(targetTripTitle: string): Promise<any> {
 }
 
 export async function deleteDay(
+  targetUserID: string,
   targetTripTitle: string,
   targetDay: number
 ): Promise<any> {
-  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -181,11 +192,13 @@ export async function deleteDay(
   }
 }
 
-export async function deleteTrip(targetTrip: string): Promise<any> {
-  const targetUser = "testuser";
+export async function deleteTrip(
+  targetUserID: string,
+  targetTrip: string
+): Promise<any> {
   const delTargetTrip = targetTrip;
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -210,10 +223,9 @@ export async function deleteTrip(targetTrip: string): Promise<any> {
   await deleteDoc(q2Snapshot.docs[0].ref);
 }
 
-export async function createTripListArr(): Promise<any> {
-  const targetUser = "testuser";
+export async function createTripListArr(targetUserID: string): Promise<any> {
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -251,13 +263,13 @@ export async function createTripListArr(): Promise<any> {
 }
 
 export async function deleteSpot(
+  targetUserID: string,
   targetTripTitle: string,
   targetDay: number,
   targetSpotTitle: string
 ): Promise<any> {
-  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -290,14 +302,14 @@ export async function deleteSpot(
 }
 
 export async function saveSpotMemo(
+  targetUserID: string,
   targetTripTitle: string,
   targetDay: number,
   targetSpotTitle: string,
   newSpotMemo: string
 ): Promise<any> {
-  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,
@@ -332,14 +344,14 @@ export async function saveSpotMemo(
 }
 
 export async function saveSpot(
+  targetUserID: string,
   targetTripID: string,
   targetDay: number,
   searchResult: any,
   detailsResult: any
 ): Promise<any> {
-  const targetUser = "testuser";
   const tripsRef = collection(firestore, "trips");
-  const q1 = query(tripsRef, where("userID", "==", targetUser));
+  const q1 = query(tripsRef, where("userID", "==", targetUserID));
   const q1Snapshot = await getDocs(q1);
   const userTripsRef = collection(
     firestore,

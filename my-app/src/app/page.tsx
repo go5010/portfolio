@@ -5,7 +5,7 @@ import Image2WithBlur from "@/components/atoms/Image2WithBlur";
 import Image3WithBlur from "@/components/atoms/Image3WithBlur";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   addDay,
   createTrip,
@@ -17,29 +17,10 @@ import {
   renameTrip,
 } from "./_api/db";
 import { DocumentData } from "firebase/firestore";
+import { UserContext } from "@/providers/UserProvider";
 
 export default function Home() {
-  const [test, setTest] = useState<DocumentData[]>();
-  useEffect(() => {
-    // const fetchTestData = async () => {
-    //   try {
-    //     const testData = await getTests();
-    //     console.log("aaaaa");
-    //     console.log(testData);
-    //     console.log("aaaaa");
-    //     if (testData) setTest(testData);
-    //   } catch (error) {
-    //     console.error("データの取得に失敗しました:", error);
-    //     throw error;
-    //   }
-    // };
-    // fetchTestData();
-    // renameTrip();
-    // addDay();
-    // deleteTrip();
-    // deleteSpot("testtrip1", 2, "spot3");
-    // deleteDay("test6", 2);
-  }, []);
+  console.log(useContext(UserContext).user?.uid);
   return (
     <div className="">
       <div className="max-w-screen-lg mx-auto lg:h-[700px] md:h-[550px] sm:h-[500px] xs:h-[400px] relative">
