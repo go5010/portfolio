@@ -33,7 +33,13 @@ const SearchResult: FC<{ searchResult: any; detailsResult: any }> = memo(
         <div className="mt-3">
           <PrimaryButton
             onClickFunc={() =>
-              saveSpot(loginUser?.uid, searchResult, detailsResult)
+              saveSpot(
+                loginUser?.uid!,
+                urlTripID,
+                urlTripDay,
+                searchResult,
+                detailsResult
+              )
             }
           >
             候補に追加

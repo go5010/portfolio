@@ -5,6 +5,7 @@
 import { firestore } from "@/_firebase/firebaseConfig";
 import { useLoginUser } from "@/hooks/useLoginUser";
 import { UserContext } from "@/providers/UserProvider";
+import firebase from "firebase/compat/app";
 import {
   DocumentData,
   collection,
@@ -359,7 +360,7 @@ export async function saveSpot(
     q1Snapshot.docs[0].id,
     "userTrips"
   );
-  const q2 = query(userTripsRef, where("title", "==", targetTripTitle));
+  const q2 = query(userTripsRef, where("__name__", "==", targetTripID));
   const q2Snapshot = await getDocs(q2);
   const daysRef = collection(
     firestore,
@@ -375,13 +376,20 @@ export async function saveSpot(
   const targetDayDocRef = q3Snapshot.docs[targetDay - 1].ref;
   // 書き換え先の配列を作成
   const newSchedules = [...q3Snapshot.docs[targetDay - 1].data().schedules];
-  console.log(newSchedules);
   const newSpotObj = {
     ...(searchResult.name && { title: searchResult.name }),
-    ...(detailsResult.photo[0] && { photo1: detailsResult.photo[0] }),
-    ...(detailsResult.photo[1] && { photo2: detailsResult.photo[1] }),
-    ...(detailsResult.photo[2] && { photo3: detailsResult.photo[2] }),
-    ...(detailsResult.photo[3] && { photo4: detailsResult.photo[3] }),
+    ...(detailsResult.photos[0] && {
+      photo1: detailsResult.photos[0].getUrl(),
+    }),
+    ...(detailsResult.photos[1] && {
+      photo2: detailsResult.photos[1].getUrl(),
+    }),
+    ...(detailsResult.photos[2] && {
+      photo3: detailsResult.photos[2].getUrl(),
+    }),
+    ...(detailsResult.photos[3] && {
+      photo4: detailsResult.photos[3].getUrl(),
+    }),
     ...(searchResult.rating && { rating: searchResult.rating }),
     ...(searchResult.vicinity && { address: searchResult.vicinity }),
     ...(detailsResult.opening_hours && {
@@ -415,6 +423,5 @@ export async function saveSpot(
   };
   newSchedules.push(newSpotObj);
   // schedulesフィールドの書き換え
-  // await updateDoc(targetDayDocRef, { schedules: newSchedules });
-  console.log(newSchedules);
+  await updateDoc(targetDayDocRef, { schedules: newSchedules });
 }
