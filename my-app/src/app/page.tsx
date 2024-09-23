@@ -4,9 +4,6 @@ import Image1WithBlur from "@/components/atoms/Image1WithBlur";
 import Image2WithBlur from "@/components/atoms/Image2WithBlur";
 import Image3WithBlur from "@/components/atoms/Image3WithBlur";
 import Image from "next/image";
-import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "@/providers/UserProvider";
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "@/_firebase/firebaseConfig";
 import { useRouter } from "next/navigation";
@@ -19,7 +16,6 @@ export default function Home() {
   // ログインしていなければゲストログイン（匿名認証）する
   const moveToSchedule = () => {
     if (user) {
-      console.log("loginしている");
       router.push(`/schedule/${user.uid}`);
     } else {
       const guestLogin = async () => {

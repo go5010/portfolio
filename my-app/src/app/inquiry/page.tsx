@@ -1,3 +1,5 @@
+"use client";
+
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import React from "react";
 
@@ -31,7 +33,14 @@ const Inquiry = () => {
             placeholder="E-mail"
             className="border-2 rounded w-full py-1 px-2 mb-8 text-xs sm:text-base"
           />
-          <PrimaryButton>送　信　</PrimaryButton>
+          <PrimaryButton
+            onClickFunc={() => {
+              alert("送信しました！");
+              location.reload();
+            }}
+          >
+            送　信　
+          </PrimaryButton>
         </div>
       </div>
     </div>

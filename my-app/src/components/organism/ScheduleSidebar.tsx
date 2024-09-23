@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
@@ -26,6 +26,7 @@ type userTripType = { id: string; title: string; schedules: schedulesType };
 const ScheduleSidebar = memo(() => {
   const loginLoading = useContext(UserContext).loginLoading;
   const loginUser = useContext(UserContext).user;
+  const router = useRouter();
   const [userTrip, setUserTrip] = useState<userTripType[]>([]);
   const [tripOpen, setTripOpen] = useState<
     { tripNo: number; open: boolean }[] | undefined
@@ -220,10 +221,18 @@ const ScheduleSidebar = memo(() => {
     newDayAnchorEls[scheduleIndex] = null;
     setDayAnchorEls(newDayAnchorEls);
   };
-  const handleDeleteDay = (targetTripTitle: string, targetDay: number) => {
-    deleteDay(loginUser!.uid, targetTripTitle, targetDay + 1);
-    fetchTrips();
-    handleDayEditClose(targetDay);
+  const handleDeleteDay = async (
+    targetTripTitle: string,
+    targetDay: number
+  ) => {
+    await deleteDay(loginUser!.uid, targetTripTitle, targetDay + 1);
+    // 選択されている日程が削除したら，１日目に遷移する
+    if (targetDay + 1 == urlTripDay) {
+      router.push(`/schedule/${loginUser?.uid}/${urlTripID}-Day1`);
+    } else {
+      await fetchTrips();
+      handleDayEditClose(targetDay);
+    }
   };
 
   // 新規作成input
@@ -416,10 +425,14 @@ const ScheduleSidebar = memo(() => {
                       >
                         <MenuItem
                           onClick={() => {
-                            handleDeleteDay(
-                              userTrip[index].title,
-                              scheduleIndex
-                            );
+                            if (trip.schedules.length == 1) {
+                              alert("日程が１日しかありません．");
+                            } else {
+                              handleDeleteDay(
+                                userTrip[index].title,
+                                scheduleIndex
+                              );
+                            }
                           }}
                         >
                           <MdDeleteForever size={18} />
