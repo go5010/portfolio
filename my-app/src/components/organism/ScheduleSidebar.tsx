@@ -226,7 +226,7 @@ const ScheduleSidebar = memo(() => {
     targetDay: number
   ) => {
     await deleteDay(loginUser!.uid, targetTripTitle, targetDay + 1);
-    // 選択されている日程が削除したら，１日目に遷移する
+    // 選択されている日程が削除されたら，１日目に遷移する
     if (targetDay + 1 == urlTripDay) {
       router.push(`/schedule/${loginUser?.uid}/${urlTripID}-Day1`);
     } else {

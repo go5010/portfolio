@@ -28,6 +28,7 @@ const Schedule = memo(() => {
   const [userTripTitle, setUserTripTitle] = useState<string | null>(null);
   const [cardOpen, setCardOpen] = useState<CardOpenType>([]);
   const [tripListLoading, setTripListLoading] = useState<boolean>(true); //マウント時のfetchTrip完了の判定
+  const [isChangedSpotList, setIsChangedSpotList] = useState<boolean>(false); //spot追加・削除でビューポートを再設定させる．
 
   useEffect(() => {
     if (!loginLoading) {
@@ -124,9 +125,11 @@ const Schedule = memo(() => {
               urlTripID={urlTripID}
               userTripTitle={userTripTitle}
               fetchTrips={fetchTrips}
+              isChangedSpotList={isChangedSpotList}
+              setIsChangedSpotList={setIsChangedSpotList}
             />
           ) : (
-            <SearchArea />
+            <SearchArea setIsChangedSpotList={setIsChangedSpotList} />
           )}
         </div>
       </div>

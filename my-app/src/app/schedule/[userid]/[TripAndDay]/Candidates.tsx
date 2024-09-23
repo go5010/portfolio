@@ -19,11 +19,12 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { deleteSpot, saveSpotMemo } from "@/app/_api/db";
+import { createTripListArr, deleteSpot, saveSpotMemo } from "@/app/_api/db";
 import { Map, useMap } from "@vis.gl/react-google-maps";
 import MapMarker from "@/components/atoms/MapMarker";
 import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
 import { UserContext } from "@/providers/UserProvider";
+import { SiTripadvisor } from "react-icons/si";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -42,6 +43,9 @@ const Candidates: FC<{
   urlTripID: string;
   userTripTitle: string;
   fetchTrips: () => Promise<void>;
+  //タブ切り替えでのビューポート再設定用
+  isChangedSpotList: boolean;
+  setIsChangedSpotList: Dispatch<SetStateAction<boolean>>;
 }> = memo(
   ({
     cardOpen,
@@ -52,6 +56,8 @@ const Candidates: FC<{
     urlTripID,
     userTripTitle,
     fetchTrips,
+    isChangedSpotList,
+    setIsChangedSpotList,
   }) => {
     const loginUser = useContext(UserContext).user;
 
@@ -97,21 +103,39 @@ const Candidates: FC<{
     // マップビューポート設定
     const map = useMap();
     useEffect(() => {
-      const fitMapToMarkers = () => {
+      const fitMapToMarkers = async () => {
+        console.log(isChangedSpotList);
         if (!map) return;
 
-        const bounds = new google.maps.LatLngBounds();
-        userTrip
-          .find((trip) => {
-            return trip.id === urlTripID;
-          })
-          ?.schedules[urlTripDay - 1].forEach((spot) => {
-            bounds.extend(spot.location);
-          });
-        map.fitBounds(bounds);
+        if (isChangedSpotList) {
+          const trips: userTripType[] = await createTripListArr(
+            loginUser?.uid!
+          );
+          const bounds = new google.maps.LatLngBounds();
+          trips
+            .find((trip) => {
+              return trip.id === urlTripID;
+            })
+            ?.schedules[urlTripDay - 1].forEach((spot) => {
+              bounds.extend(spot.location);
+            });
+          map.fitBounds(bounds);
+          setIsChangedSpotList(false);
+        } else {
+          const bounds = new google.maps.LatLngBounds();
+          userTrip
+            .find((trip) => {
+              return trip.id === urlTripID;
+            })
+            ?.schedules[urlTripDay - 1].forEach((spot) => {
+              bounds.extend(spot.location);
+            });
+          map.fitBounds(bounds);
+          setIsChangedSpotList(false);
+        }
       };
       fitMapToMarkers();
-    }, [map]);
+    }, [map, isChangedSpotList]);
 
     // spotメモ
     const [spotMemo, setSpotMemo] = useState<string[] | undefined>(
@@ -242,24 +266,25 @@ const Candidates: FC<{
                         aria-describedby="alert-dialog-description"
                       >
                         <DialogTitle id="alert-dialog-title">
-                          {"候補スポットを削除しますか？"}
+                          {"スポットを削除しますか？"}
                         </DialogTitle>
                         <DialogActions>
                           <Button onClick={handleDialogClose} autoFocus>
                             キャンセル
                           </Button>
                           <Button
-                            onClick={() => {
+                            onClick={async () => {
                               handleDialogClose();
-                              deleteSpot(
+                              await deleteSpot(
                                 loginUser!.uid,
                                 userTripTitle,
                                 urlTripDay,
                                 spot.title
                               );
                               setUserTrip([]);
-                              fetchTrips();
+                              await fetchTrips();
                               updateCardOpen(spotIndex);
+                              setIsChangedSpotList(true);
                             }}
                             color="error"
                           >

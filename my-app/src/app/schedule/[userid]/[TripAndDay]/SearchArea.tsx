@@ -1,9 +1,17 @@
 import SearchResult from "@/components/organism/SearchResult";
 import { Map, useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
-import Image from "next/image";
-import React, { memo, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  FC,
+  memo,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
-export const SearchArea = memo(() => {
+export const SearchArea: FC<{
+  setIsChangedSpotList: Dispatch<SetStateAction<boolean>>;
+}> = memo(({ setIsChangedSpotList }) => {
   const map = useMap();
   const placesLib = useMapsLibrary("places");
 
@@ -163,6 +171,7 @@ export const SearchArea = memo(() => {
           <SearchResult
             searchResult={result}
             detailsResult={detailsResults[index]}
+            setIsChangedSpotList={setIsChangedSpotList}
           />
         );
       })}
