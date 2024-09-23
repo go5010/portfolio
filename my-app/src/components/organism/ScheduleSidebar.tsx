@@ -90,22 +90,26 @@ const ScheduleSidebar = memo(() => {
 
   // 選択されている旅行のbg colorを黒くするための旅行ID・日程の取得
   const pathname = usePathname();
-  console.log(pathname);
-  console.log(loginUser?.uid);
   function escapeRegExp(string: string) {
     return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
   }
-  let urlTripID: any = null;
-  let urlTripDay: any = null;
-  // if (pathname !== "/schedule" && pathname !== "/schedule/" + loginUser?.uid) {
-  //   const re = new RegExp(
-  //     `${escapeRegExp(loginUser?.uid + "/")}(.*)${escapeRegExp("-Day")}`
-  //   );
-  //   const urlTripIDTemp = pathname.match(re);
-  //   urlTripID = urlTripIDTemp![1];
-  //   const urlTripDayTemp = pathname.match(/Day(.*)/);
-  //   urlTripDay = Number(urlTripDayTemp![1]);
-  // }
+  const [urlTripID, setUrlTripID] = useState<string>("");
+  const [urlTripDay, setUrlTripDay] = useState<number | null>(null);
+  useEffect(() => {
+    if (
+      !loginLoading &&
+      pathname !== "/schedule" &&
+      pathname !== "/schedule/" + loginUser?.uid
+    ) {
+      const re = new RegExp(
+        `${escapeRegExp(loginUser?.uid + "/")}(.*)${escapeRegExp("-Day")}`
+      );
+      const urlTripIDTemp = pathname.match(re);
+      setUrlTripID(urlTripIDTemp![1]);
+      const urlTripDayTemp = pathname.match(/Day(.*)/);
+      setUrlTripDay(Number(urlTripDayTemp![1]));
+    }
+  }, [loginLoading]);
 
   //名前の変更・旅行の削除MENU
   const [tripAnchorEls, setTripAnchorEls] = useState<(null | HTMLElement)[]>(
