@@ -11,8 +11,21 @@ import { UserContext } from "@/providers/UserProvider";
 
 type schedulesType = {
   title: string;
+  address: string;
   memo: string;
+  rating: number;
   location: { lat: number; lng: number };
+  open_hours_mon: string;
+  open_hours_tue: string;
+  open_hours_wed: string;
+  open_hours_thu: string;
+  open_hours_fri: string;
+  open_hours_sat: string;
+  open_hours_sun: string;
+  photo1: string;
+  photo2: string;
+  photo3: string;
+  photo4: string;
 }[][];
 type userTripType = { id: string; title: string; schedules: schedulesType };
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;

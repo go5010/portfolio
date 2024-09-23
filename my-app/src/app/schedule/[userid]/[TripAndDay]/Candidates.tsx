@@ -25,12 +25,26 @@ import MapMarker from "@/components/atoms/MapMarker";
 import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
 import { UserContext } from "@/providers/UserProvider";
 import { SiTripadvisor } from "react-icons/si";
+import Image from "next/image";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
   title: string;
+  address: string;
   memo: string;
+  rating: number;
   location: { lat: number; lng: number };
+  open_hours_mon: string;
+  open_hours_tue: string;
+  open_hours_wed: string;
+  open_hours_thu: string;
+  open_hours_fri: string;
+  open_hours_sat: string;
+  open_hours_sun: string;
+  photo1: string;
+  photo2: string;
+  photo3: string;
+  photo4: string;
 }[][];
 type userTripType = { id: string; title: string; schedules: schedulesType };
 
@@ -222,18 +236,61 @@ const Candidates: FC<{
                     <p className="font-semibold">{spot.title}</p>
                     {cardOpen![spotIndex].open === true && (
                       <div className="mt-2">
+                        <div className="ml-3 mb-4 mt-4 w-[320px] flex justify-between">
+                          <Image
+                            src={spot.photo1}
+                            alt=""
+                            width={70}
+                            height={70}
+                            className="object-cover w-[70px] h-[70px]"
+                          />
+                          <Image
+                            src={spot.photo2}
+                            alt=""
+                            width={70}
+                            height={70}
+                            className="object-cover w-[70px] h-[70px]"
+                          />
+                          <Image
+                            src={spot.photo3}
+                            alt=""
+                            width={70}
+                            height={70}
+                            className="object-cover w-[70px] h-[70px]"
+                          />
+                          <Image
+                            src={spot.photo4}
+                            alt=""
+                            width={70}
+                            height={70}
+                            className="object-cover w-[70px] h-[70px]"
+                          />
+                        </div>
                         <div className="flex items-center mb-1">
-                          <span className="text-sm mx-1">4.4</span>
+                          <span className="text-sm mx-1">{spot.rating}</span>
                           <Rating
                             name="half-rating-read"
-                            defaultValue={4.4}
+                            defaultValue={spot.rating}
                             precision={0.1}
                             readOnly
                             size="small"
                           />
                         </div>
-                        <div>住所，写真</div>
-                        <div>・営業日/時間</div>
+                        <div>{`・住所：${spot.address}`}</div>
+                        {spot.open_hours_mon && (
+                          <div>
+                            <div className="mb-1">・営業日/時間</div>
+                            <div className="ml-8">
+                              <p>{spot.open_hours_mon}</p>
+                              <p>{spot.open_hours_tue}</p>
+                              <p>{spot.open_hours_wed}</p>
+                              <p>{spot.open_hours_thu}</p>
+                              <p>{spot.open_hours_fri}</p>
+                              <p>{spot.open_hours_sat}</p>
+                              <p>{spot.open_hours_sun}</p>
+                            </div>
+                          </div>
+                        )}
                         <br />
                         <div className="mb-[75px]">・メモ</div>
                       </div>
