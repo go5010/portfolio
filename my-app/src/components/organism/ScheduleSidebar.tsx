@@ -90,6 +90,8 @@ const ScheduleSidebar = memo(() => {
 
   // 選択されている旅行のbg colorを黒くするための旅行ID・日程の取得
   const pathname = usePathname();
+  console.log(pathname);
+  console.log(loginUser?.uid);
   function escapeRegExp(string: string) {
     return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
   }

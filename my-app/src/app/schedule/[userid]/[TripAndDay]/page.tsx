@@ -31,40 +31,42 @@ const Schedule = memo(() => {
 
   useEffect(() => {
     if (!loginLoading) {
-      const fetchTrips = async () => {
-        const trips: userTripType[] = await createTripListArr(loginUser!.uid);
+      if (candiOrSearch == "candidates") {
+        const fetchTrips = async () => {
+          const trips: userTripType[] = await createTripListArr(loginUser!.uid);
 
-        function escapeRegExp(string: string) {
-          return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
-        }
-        const re = new RegExp(
-          `${escapeRegExp(loginUser?.uid + "/")}(.*)${escapeRegExp("-Day")}`
-        );
-        const urlTripIDTemp = pathname.match(re);
-        setUrlTripID(urlTripIDTemp![1]);
-        const urlTripDayTemp = pathname.match(/Day(.*)/);
-        setUrlTripDay(Number(urlTripDayTemp![1]));
-        setUserTripTitle(
-          trips.find((trip) => {
-            return trip.id === urlTripIDTemp![1];
-          })!.title
-        );
-        setCardOpen(
-          trips
-            .find((trip) => {
+          function escapeRegExp(string: string) {
+            return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
+          }
+          const re = new RegExp(
+            `${escapeRegExp(loginUser?.uid + "/")}(.*)${escapeRegExp("-Day")}`
+          );
+          const urlTripIDTemp = pathname.match(re);
+          setUrlTripID(urlTripIDTemp![1]);
+          const urlTripDayTemp = pathname.match(/Day(.*)/);
+          setUrlTripDay(Number(urlTripDayTemp![1]));
+          setUserTripTitle(
+            trips.find((trip) => {
               return trip.id === urlTripIDTemp![1];
-            })!
-            .schedules[Number(urlTripDayTemp![1]) - 1].map((_, index) => {
-              return { spotNo: index + 1, open: false };
-            })
-        );
+            })!.title
+          );
+          setCardOpen(
+            trips
+              .find((trip) => {
+                return trip.id === urlTripIDTemp![1];
+              })!
+              .schedules[Number(urlTripDayTemp![1]) - 1].map((_, index) => {
+                return { spotNo: index + 1, open: false };
+              })
+          );
 
-        setUserTrip(trips);
-        setTripListLoading(false);
-      };
-      fetchTrips();
+          setUserTrip(trips);
+          setTripListLoading(false);
+        };
+        fetchTrips();
+      }
     }
-  }, [loginLoading]);
+  }, [loginLoading, candiOrSearch]); // 追加した候補スポットを反映させるために，candiOrSearchを依存配列に指定．
 
   const fetchTrips = async () => {
     if (!loginLoading) {

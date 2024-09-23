@@ -6,21 +6,37 @@ import Image3WithBlur from "@/components/atoms/Image3WithBlur";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
-import {
-  addDay,
-  createTrip,
-  createTripListArr,
-  deleteDay,
-  deleteSpot,
-  deleteTrip,
-  getTests,
-  renameTrip,
-} from "./_api/db";
-import { DocumentData } from "firebase/firestore";
 import { UserContext } from "@/providers/UserProvider";
+import { signInAnonymously } from "firebase/auth";
+import { auth } from "@/_firebase/firebaseConfig";
+import { useRouter } from "next/navigation";
+import { useLoginUser } from "@/hooks/useLoginUser";
+import { addUser } from "./_api/db";
 
 export default function Home() {
-  console.log(useContext(UserContext).user?.uid);
+  const router = useRouter();
+  const { user, setUser } = useLoginUser();
+  // ログインしていなければゲストログイン（匿名認証）する
+  const moveToSchedule = () => {
+    if (user) {
+      console.log("loginしている");
+      router.push(`/schedule/${user.uid}`);
+    } else {
+      const guestLogin = async () => {
+        await signInAnonymously(auth)
+          .then(async () => {
+            await addUser(auth.currentUser?.uid!); //Tripsコレクション内にドキュメント作成
+            alert("ゲストログインしました！");
+            router.push(`/schedule/${auth.currentUser?.uid!}`);
+          })
+          .catch(() => {
+            alert("ゲストログインに失敗しました．");
+          });
+      };
+      guestLogin();
+    }
+  };
+
   return (
     <div className="">
       <div className="max-w-screen-lg mx-auto lg:h-[700px] md:h-[550px] sm:h-[500px] xs:h-[400px] relative">
@@ -97,12 +113,12 @@ export default function Home() {
           さっそく使ってみよう！
         </div>
         <div className="flex justify-center">
-          <Link
-            href="/schedule"
+          <button
             className=" text-white text-center sm:text-xl sm:py-4 sm:px-8 xs:text-md xs:py-3 xs:px-6 rounded-lg bg-theme-blue hover:opacity-80 border-none outline-none"
+            onClick={moveToSchedule}
           >
             使ってみる
-          </Link>
+          </button>
         </div>
       </div>
     </div>

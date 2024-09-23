@@ -32,15 +32,16 @@ const SearchResult: FC<{ searchResult: any; detailsResult: any }> = memo(
       <div className="flex items-start border-t pt-4 mb-4">
         <div className="mt-3">
           <PrimaryButton
-            onClickFunc={() =>
-              saveSpot(
+            onClickFunc={async () => {
+              await saveSpot(
                 loginUser?.uid!,
                 urlTripID,
                 urlTripDay,
                 searchResult,
                 detailsResult
-              )
-            }
+              );
+              alert("候補に追加しました！");
+            }}
           >
             候補に追加
           </PrimaryButton>
