@@ -291,7 +291,6 @@ const Candidates: FC<{
                             </div>
                           </div>
                         )}
-                        <br />
                         <div className="mb-[75px]">・メモ</div>
                       </div>
                     )}
