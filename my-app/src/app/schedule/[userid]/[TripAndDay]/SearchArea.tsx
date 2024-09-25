@@ -1,5 +1,7 @@
 import SearchResult from "@/components/organism/SearchResult";
 import { Map, useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import React, {
   Dispatch,
   FC,
@@ -8,6 +10,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import municipalities from "./municipalities.json";
 
 export const SearchArea: FC<{
   setIsChangedSpotList: Dispatch<SetStateAction<boolean>>;
@@ -161,7 +164,7 @@ export const SearchArea: FC<{
 
   return (
     <>
-      <div>SearchArea</div>
+      <div>{municipalities.三重県[0]}</div>
       <input className="border rounded-tl-md rounded-bl-md"></input>
       <input className="border"></input>
       <input className="border"></input>

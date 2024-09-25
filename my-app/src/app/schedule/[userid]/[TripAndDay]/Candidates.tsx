@@ -26,6 +26,7 @@ import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
 import { UserContext } from "@/providers/UserProvider";
 import { SiTripadvisor } from "react-icons/si";
 import Image from "next/image";
+import DropdownMenu from "./Dropdown";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
@@ -211,6 +212,7 @@ const Candidates: FC<{
     return (
       <div className="flex mt-5 px-3">
         {/* 候補spotカード */}
+        <DropdownMenu />
         <div className="w-2/3 flex flex-col">
           {userTrip
             .find((trip) => {
