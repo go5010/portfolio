@@ -168,7 +168,7 @@ export const SearchArea: FC<{
     <>
       <div>{municipalities.三重県[0]}</div>
       <div className="flex">
-        <input className="border rounded-tl-md rounded-bl-md h-[30px]"></input>
+        <input className="border border-gray-400 rounded-tl-md rounded-bl-md h-[30px]"></input>
         <AreaDropdownMenu />
         <PlaceTypeDropdown />
       </div>

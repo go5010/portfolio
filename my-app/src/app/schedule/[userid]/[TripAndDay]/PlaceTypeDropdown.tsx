@@ -25,14 +25,14 @@ const PlaceTypeDropdown = () => {
       {displayPlaceType ? (
         <button
           onClick={() => setIsSelectPlaceTypeOpen(!isSelectPlaceTypeOpen)}
-          className="border border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left pl-2"
+          className="border border-gray-400 rounded-tr-md rounded-br-md w-[200px] h-[30px] mb-1 text-left pl-2"
         >
           {displayPlaceType}
         </button>
       ) : (
         <button
           onClick={() => setIsSelectPlaceTypeOpen(!isSelectPlaceTypeOpen)}
-          className="border border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left pl-2"
+          className="border border-gray-400 rounded-tr-md rounded-br-md w-[200px] h-[30px] mb-1 text-left pl-2"
         >
           カテゴリを選択
         </button>
@@ -48,7 +48,7 @@ const PlaceTypeDropdown = () => {
             className="w-screen h-screen fixed top-0 left-0 z-10"
           ></div>
 
-          <div className="w-[200px] h-[300px] rounded border pl-2 py-2 z-20 relative overflow-auto">
+          <div className="w-[200px] h-[300px] rounded border border-gray-400 pl-2 py-2 z-20 relative overflow-auto">
             {placeTypesJPN.map((placeTypeJPN, index) => (
               // <React.Fragment key={placeTypeJPN}>
               <div className="flex items-center hover:bg-slate-200">
