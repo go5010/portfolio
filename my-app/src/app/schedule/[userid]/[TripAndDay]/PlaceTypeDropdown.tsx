@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import { placeTypesJPN, placeTypes } from "./placeType";
 
 const PlaceTypeDropdown = () => {
@@ -16,7 +15,6 @@ const PlaceTypeDropdown = () => {
   ) => {
     setSelectedPlaceType(placeTypes[index]);
     setDisplayPlaceType(placeTypeJPN);
-    console.log(selectedPlaceType);
     setIsSelectPlaceTypeOpen(false);
   };
 
@@ -25,14 +23,14 @@ const PlaceTypeDropdown = () => {
       {displayPlaceType ? (
         <button
           onClick={() => setIsSelectPlaceTypeOpen(!isSelectPlaceTypeOpen)}
-          className="border border-gray-400 rounded-tr-md rounded-br-md w-[200px] h-[30px] mb-1 text-left pl-2"
+          className="border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[200px] h-[30px] mb-1 text-left  pl-2"
         >
           {displayPlaceType}
         </button>
       ) : (
         <button
           onClick={() => setIsSelectPlaceTypeOpen(!isSelectPlaceTypeOpen)}
-          className="border border-gray-400 rounded-tr-md rounded-br-md w-[200px] h-[30px] mb-1 text-left pl-2"
+          className="border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[200px] h-[30px] mb-1 text-left text-gray-300 pl-2"
         >
           カテゴリを選択
         </button>

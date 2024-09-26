@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import municipalitiesData from "./municipalities.json";
+import { cityLngLatArr } from "./municipalitiesLatLng";
 
 type Municipalities = {
   [prefecture: string]: string[];
@@ -14,6 +15,7 @@ const AreaDropdownMenu = () => {
   const [selectedMunicipalities, setSelectedMunicipalities] =
     useState<string>("");
   const [displayPrefecture, setDisplayPrefecture] = useState<string>("");
+  const [targetLngLat, setTargetLngLat] = useState<Array<number>>([]);
 
   // サブメニューを開く
   const handleSubMenuOpen = (
@@ -25,6 +27,20 @@ const AreaDropdownMenu = () => {
     } else {
       setSelectedPrefecture(""); //サブメニューを閉じる
     }
+  };
+
+  const handleSelectMunicipalities = (city: string, prefecture: string) => {
+    setSelectedMunicipalities(city);
+    setIsSelectAreaOpen(false);
+    setDisplayPrefecture(prefecture);
+    setSelectedPrefecture("");
+    // 役所の座標を取得
+    const newTargetLngLat = cityLngLatArr.find((cityLngLat) => {
+      // city.name.includes(displayPrefecture) &&
+      return cityLngLat.name.includes(city);
+    })?.lnglat;
+    console.log(newTargetLngLat);
+    setTargetLngLat(newTargetLngLat!);
   };
 
   return (
@@ -39,7 +55,7 @@ const AreaDropdownMenu = () => {
       ) : (
         <button
           onClick={() => setIsSelectAreaOpen(!isSelectAreaOpen)}
-          className="border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left pl-2"
+          className="border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left text-gray-300 pl-2"
         >
           都道府県を選択
         </button>
@@ -78,12 +94,9 @@ const AreaDropdownMenu = () => {
                   municipalities[selectedPrefecture].map((city) => (
                     <div className=" hover:bg-slate-200">
                       <button
-                        onClick={() => {
-                          setSelectedMunicipalities(city);
-                          setIsSelectAreaOpen(false);
-                          setDisplayPrefecture(prefecture);
-                          setSelectedPrefecture("");
-                        }}
+                        onClick={() =>
+                          handleSelectMunicipalities(city, prefecture)
+                        }
                         className="pl-10 w-full text-left"
                       >
                         {city}
