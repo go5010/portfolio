@@ -11,6 +11,8 @@ import React, {
   useState,
 } from "react";
 import municipalities from "./municipalities.json";
+import AreaDropdownMenu from "./AreaDropdown";
+import PlaceTypeDropdown from "./PlaceTypeDropdown";
 
 export const SearchArea: FC<{
   setIsChangedSpotList: Dispatch<SetStateAction<boolean>>;
@@ -140,34 +142,36 @@ export const SearchArea: FC<{
     });
   };
 
-  useEffect(() => {
-    if (!placesLib || !map) return;
-    nearbySearch();
-  }, [placesLib, map]);
-  console.log(searchResults, detailsResults);
+  // useEffect(() => {
+  //   if (!placesLib || !map) return;
+  //   nearbySearch();
+  // }, [placesLib, map]);
+  // console.log(searchResults, detailsResults);
 
-  if (!searchResults.length || !detailsResults.length) {
-    return (
-      <>
-        <div>loading...</div>{" "}
-        <Map
-          style={{ width: "0px", height: "0px" }}
-          defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
-          defaultZoom={10}
-          gestureHandling={"greedy"}
-          mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
-          disableDefaultUI={true}
-        />
-      </>
-    );
-  }
+  // if (!searchResults.length || !detailsResults.length) {
+  //   return (
+  //     <>
+  //       <div>loading...</div>{" "}
+  //       <Map
+  //         style={{ width: "0px", height: "0px" }}
+  //         defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
+  //         defaultZoom={10}
+  //         gestureHandling={"greedy"}
+  //         mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
+  //         disableDefaultUI={true}
+  //       />
+  //     </>
+  //   );
+  // }
 
   return (
     <>
       <div>{municipalities.三重県[0]}</div>
-      <input className="border rounded-tl-md rounded-bl-md"></input>
-      <input className="border"></input>
-      <input className="border"></input>
+      <div className="flex">
+        <input className="border rounded-tl-md rounded-bl-md h-[30px]"></input>
+        <AreaDropdownMenu />
+        <PlaceTypeDropdown />
+      </div>
       <div className="h-[20px]"></div>
       {searchResults.map((result: any, index: number) => {
         return (

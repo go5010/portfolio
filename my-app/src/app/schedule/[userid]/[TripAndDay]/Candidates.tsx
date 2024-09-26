@@ -26,7 +26,7 @@ import TravelTimeSearch from "@/components/organism/TravelTimeSearch";
 import { UserContext } from "@/providers/UserProvider";
 import { SiTripadvisor } from "react-icons/si";
 import Image from "next/image";
-import DropdownMenu from "./Dropdown";
+import DropdownMenu from "./AreaDropdown";
 
 type CardOpenType = { spotNo: number; open: boolean }[] | undefined;
 type schedulesType = {
