@@ -1,7 +1,5 @@
 import SearchResult from "@/components/organism/SearchResult";
 import { Map, useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import React, {
   Dispatch,
   FC,
@@ -10,7 +8,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import municipalities from "./municipalities.json";
 import AreaDropdownMenu from "./AreaDropdown";
 import PlaceTypeDropdown from "./PlaceTypeDropdown";
 
@@ -19,57 +16,29 @@ export const SearchArea: FC<{
 }> = memo(({ setIsChangedSpotList }) => {
   const map = useMap();
   const placesLib = useMapsLibrary("places");
-
+  const [queryKeyword, setQueryKeyword] = useState<string>("");
+  const [queryLngLat, setQueryLngLat] = useState<Array<number>>([]);
+  const [queryPlaceType, setQueryPlaceType] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any>([]);
   const [detailsResults, setDetailsResults] = useState<any>([]);
 
-  const request = {
-    query: "東京スカイツリー",
+  const placeRequest = {
+    query: queryKeyword,
     fields: ["name", "rating", "geometry", "types", "place_id"],
   };
 
-  const request2 = {
-    location: { lat: 35.92533750162224, lng: 139.48583982465075 },
+  const nearbyRequest = {
+    location: { lat: queryLngLat[1], lng: queryLngLat[0] },
     radius: 7000,
-    type: "cafe",
+    type: queryPlaceType,
   };
-
-  // useEffect(() => {
-  //   if (!placesLib || !map) return;
-
-  //   const svc = new placesLib.PlacesService(map);
-  //   svc.findPlaceFromQuery(request, (results, status) => {
-  //     console.log(results);
-
-  //     if (status == google.maps.places.PlacesServiceStatus.OK) {
-  //       const detailsReq = {
-  //         placeId: results![0].place_id,
-  //         fields: ["photos", "address_components", "opening_hours"],
-  //       };
-  //       const detailsCallback = (detailsRes: any, detailsSta: any) => {
-  //         if (detailsSta == google.maps.places.PlacesServiceStatus.OK) {
-  //           console.log(detailsRes);
-  //           setPhotoUrl(detailsRes.photos[0].getUrl());
-  //         }
-  //       };
-  //       // @ts-ignore
-  //       svc.getDetails(detailsReq, detailsCallback);
-  //     }
-  //   });
-  //   // svc.nearbySearch(request2, (results, status) => {
-  //   //   const results2 = results?.filter((result) => {
-  //   //     return result.vicinity?.includes("川越市");
-  //   //   });
-  //   //   console.log(results2);
-  //   // });
-  // }, [placesLib, map]);
 
   // findPlaceSearch
   const findPlaceSearch = () => {
     if (!placesLib || !map) return;
 
     const svc = new placesLib.PlacesService(map);
-    svc.findPlaceFromQuery(request, (results, status) => {
+    svc.findPlaceFromQuery(placeRequest, (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         setSearchResults(results);
         const newDetailsResults = [...detailsResults];
@@ -109,7 +78,7 @@ export const SearchArea: FC<{
       });
     };
 
-    svc.nearbySearch(request2, async (results, status) => {
+    svc.nearbySearch(nearbyRequest, async (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         // 対象市区町村だけにフィルタリング
         const newResults = results?.filter((result) => {
@@ -166,11 +135,10 @@ export const SearchArea: FC<{
 
   return (
     <>
-      <div>{municipalities.三重県[0]}</div>
-      <div className="flex">
+      <div className="flex mt-6">
         <input className="border border-gray-400 rounded-tl-md rounded-bl-md h-[30px] focus:outline-none p-2"></input>
-        <AreaDropdownMenu />
-        <PlaceTypeDropdown />
+        <AreaDropdownMenu setQueryLngLat={setQueryLngLat} />
+        <PlaceTypeDropdown setQueryPlaceType={setQueryPlaceType} />
       </div>
       <div className="h-[20px]"></div>
       {searchResults.map((result: any, index: number) => {

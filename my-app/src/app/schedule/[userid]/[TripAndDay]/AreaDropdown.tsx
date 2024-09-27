@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, FC, memo, SetStateAction, useState } from "react";
 import { SlArrowRight, SlArrowDown } from "react-icons/sl";
 import municipalitiesData from "./municipalities.json";
 import { cityLngLatArr } from "./municipalitiesLatLng";
@@ -9,19 +9,17 @@ type Municipalities = {
 
 const municipalities: Municipalities = municipalitiesData;
 
-const AreaDropdownMenu = () => {
+const AreaDropdownMenu: FC<{
+  setQueryLngLat: Dispatch<SetStateAction<Array<number>>>;
+}> = memo(({ setQueryLngLat }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string>(""); // 選択された都道府県
   const [isSelectAreaOpen, setIsSelectAreaOpen] = useState<boolean>(false);
   const [selectedMunicipalities, setSelectedMunicipalities] =
     useState<string>("");
   const [displayPrefecture, setDisplayPrefecture] = useState<string>("");
-  const [targetLngLat, setTargetLngLat] = useState<Array<number>>([]);
 
   // サブメニューを開く
-  const handleSubMenuOpen = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    prefecture: string
-  ) => {
+  const handleSubMenuOpen = (prefecture: string) => {
     if (selectedPrefecture !== prefecture) {
       setSelectedPrefecture(prefecture);
     } else {
@@ -35,12 +33,14 @@ const AreaDropdownMenu = () => {
     setDisplayPrefecture(prefecture);
     setSelectedPrefecture("");
     // 役所の座標を取得
-    const newTargetLngLat = cityLngLatArr.find((cityLngLat) => {
-      // city.name.includes(displayPrefecture) &&
-      return cityLngLat.name.includes(city);
+    const targetLngLat = cityLngLatArr.find((cityLngLat) => {
+      return (
+        cityLngLat.name.includes(displayPrefecture) &&
+        cityLngLat.name.includes(city)
+      );
     })?.lnglat;
-    console.log(newTargetLngLat);
-    setTargetLngLat(newTargetLngLat!);
+    console.log(targetLngLat);
+    setQueryLngLat(targetLngLat!);
   };
 
   return (
@@ -77,7 +77,7 @@ const AreaDropdownMenu = () => {
               <React.Fragment key={prefecture}>
                 <div className="flex items-center hover:bg-slate-200">
                   <button
-                    onClick={(event) => handleSubMenuOpen(event, prefecture)}
+                    onClick={() => handleSubMenuOpen(prefecture)}
                     className="flex items-center flex-grow"
                   >
                     {selectedPrefecture === prefecture ? (
@@ -110,6 +110,6 @@ const AreaDropdownMenu = () => {
       )}
     </div>
   );
-};
+});
 
 export default AreaDropdownMenu;

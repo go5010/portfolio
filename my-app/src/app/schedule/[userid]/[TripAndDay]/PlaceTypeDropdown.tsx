@@ -1,19 +1,15 @@
-import React, { useState } from "react";
+import React, { Dispatch, FC, memo, SetStateAction, useState } from "react";
 import { placeTypesJPN, placeTypes } from "./placeType";
 
-const PlaceTypeDropdown = () => {
-  const [selectedPlaceType, setSelectedPlaceType] = useState<string>(""); // 選択された都道府県
+const PlaceTypeDropdown: FC<{
+  setQueryPlaceType: Dispatch<SetStateAction<string>>;
+}> = memo(({ setQueryPlaceType }) => {
   const [isSelectPlaceTypeOpen, setIsSelectPlaceTypeOpen] =
     useState<boolean>(false);
   const [displayPlaceType, setDisplayPlaceType] = useState<string>("");
 
-  // サブメニューを開く
-  const handleSubMenuOpen = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    placeTypeJPN: string,
-    index: number
-  ) => {
-    setSelectedPlaceType(placeTypes[index]);
+  const selectPlaceType = (placeTypeJPN: string, index: number) => {
+    setQueryPlaceType(placeTypes[index]);
     setDisplayPlaceType(placeTypeJPN);
     setIsSelectPlaceTypeOpen(false);
   };
@@ -48,24 +44,23 @@ const PlaceTypeDropdown = () => {
 
           <div className="w-[200px] h-[300px] rounded border border-gray-400 pl-2 py-2 z-20 relative overflow-auto">
             {placeTypesJPN.map((placeTypeJPN, index) => (
-              // <React.Fragment key={placeTypeJPN}>
-              <div className="flex items-center hover:bg-slate-200">
+              <div
+                className="flex items-center hover:bg-slate-200"
+                key={placeTypeJPN}
+              >
                 <button
-                  onClick={(event) =>
-                    handleSubMenuOpen(event, placeTypeJPN, index)
-                  }
+                  onClick={() => selectPlaceType(placeTypeJPN, index)}
                   className="items-center flex-grow  text-left pl-2"
                 >
                   {placeTypeJPN}
                 </button>
               </div>
-              // </React.Fragment>
             ))}
           </div>
         </>
       )}
     </div>
   );
-};
+});
 
 export default PlaceTypeDropdown;
