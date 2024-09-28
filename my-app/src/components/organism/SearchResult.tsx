@@ -5,12 +5,14 @@ import PrimaryButton from "../atoms/PrimaryButton";
 import { saveSpot } from "@/app/_api/db";
 import { usePathname } from "next/navigation";
 import { UserContext } from "@/providers/UserProvider";
+import { Map, useMap } from "@vis.gl/react-google-maps";
 
 const SearchResult: FC<{
   searchResult: any;
   detailsResult: any;
   setIsChangedSpotList: Dispatch<SetStateAction<boolean>>;
 }> = memo(({ searchResult, detailsResult, setIsChangedSpotList }) => {
+  const map = useMap();
   const loginUser = useContext(UserContext).user;
   const pathname = usePathname();
   function escapeRegExp(string: string) {
@@ -82,7 +84,6 @@ const SearchResult: FC<{
         </div>
         <div>
           <p className="font-semibold text-xl">{searchResult.name}</p>
-          <p>{searchResult.cafe}</p>
           <p>{searchResult.vicinity}</p>
           <p>営業時間</p>
           {detailsResult.opening_hours && (

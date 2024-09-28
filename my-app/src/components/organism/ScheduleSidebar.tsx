@@ -271,7 +271,7 @@ const ScheduleSidebar = memo(() => {
   }
 
   return (
-    <div className="h-[1000px] w-[250px] bg-slate-100 border-r-2">
+    <div className="min-h-[1000px] w-[250px] bg-slate-100 border-r-2">
       <ul className="pt-4 pl-6 mb-2 font-semibold">スケジュール一覧</ul>
       {userTrip.map((trip, index) => {
         return (

@@ -11,7 +11,8 @@ const municipalities: Municipalities = municipalitiesData;
 
 const AreaDropdownMenu: FC<{
   setQueryLngLat: Dispatch<SetStateAction<Array<number>>>;
-}> = memo(({ setQueryLngLat }) => {
+  isLack: string;
+}> = memo(({ setQueryLngLat, isLack }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string>(""); // 選択された都道府県
   const [isSelectAreaOpen, setIsSelectAreaOpen] = useState<boolean>(false);
   const [selectedMunicipalities, setSelectedMunicipalities] =
@@ -35,8 +36,7 @@ const AreaDropdownMenu: FC<{
     // 役所の座標を取得
     const targetLngLat = cityLngLatArr.find((cityLngLat) => {
       return (
-        cityLngLat.name.includes(displayPrefecture) &&
-        cityLngLat.name.includes(city)
+        cityLngLat.name.includes(prefecture) && cityLngLat.name.includes(city)
       );
     })?.lnglat;
     console.log(targetLngLat);
@@ -55,7 +55,11 @@ const AreaDropdownMenu: FC<{
       ) : (
         <button
           onClick={() => setIsSelectAreaOpen(!isSelectAreaOpen)}
-          className="border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left text-gray-300 pl-2"
+          className={
+            isLack === "Area"
+              ? "border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left text-red-400 pl-2"
+              : "border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left text-gray-300 pl-2"
+          }
         >
           都道府県を選択
         </button>
