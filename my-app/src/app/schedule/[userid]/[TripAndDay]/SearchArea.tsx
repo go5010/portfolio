@@ -180,24 +180,28 @@ export const SearchArea: FC<{
 
   return (
     <>
-      <div className="flex mt-6">
-        <input
-          className="border border-gray-400 rounded-tl-md rounded-bl-md h-[30px] focus:outline-none p-2 placeholder-gray-300"
-          onChange={(event) => {
-            setQueryKeyword(event.target.value);
-          }}
-          placeholder="キーワード"
-        ></input>
-        <AreaDropdownMenu setQueryLngLat={setQueryLngLat} isLack={isLack} />
-        <PlaceTypeDropdown
-          setQueryPlaceType={setQueryPlaceType}
-          isLack={isLack}
-        />
+      <div className="flex mt-6 justify-center items-center">
+        <div className="flex mr-10">
+          <input
+            className="border border-gray-400 rounded-tl-md rounded-bl-md h-[30px] focus:outline-none p-2 placeholder-gray-300"
+            onChange={(event) => {
+              setQueryKeyword(event.target.value);
+            }}
+            placeholder="キーワード"
+          ></input>
+          <AreaDropdownMenu setQueryLngLat={setQueryLngLat} isLack={isLack} />
+          <PlaceTypeDropdown
+            setQueryPlaceType={setQueryPlaceType}
+            isLack={isLack}
+          />
+        </div>
+        <PrimaryButton onClickFunc={executeSearch}>検索</PrimaryButton>
       </div>
-      <PrimaryButton onClickFunc={executeSearch}>検索</PrimaryButton>
       {/* 検索未実施 */}
       {!didSearch && (
-        <div>「キーワード」か「エリアとカテゴリ」で検索してみましょう！</div>
+        <div className="text-center font-extrabold xs:text-lg md:text-xl w-full mt-8">
+          「キーワード」か「エリアとカテゴリ」で検索してみましょう！
+        </div>
       )}
       {/* 検索中 */}
       {didSearch && resultLoading && (

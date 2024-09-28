@@ -44,7 +44,7 @@ const AreaDropdownMenu: FC<{
   };
 
   return (
-    <div>
+    <div className="relative">
       {selectedMunicipalities ? (
         <button
           onClick={() => setIsSelectAreaOpen(!isSelectAreaOpen)}
@@ -61,12 +61,12 @@ const AreaDropdownMenu: FC<{
               : "border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left text-gray-300 pl-2"
           }
         >
-          都道府県を選択
+          エリアを選択
         </button>
       )}
 
       {isSelectAreaOpen && (
-        <>
+        <div className="absolute bg-white">
           {/* プルダウンメニュー外クリックでメニューを閉じる */}
           <div
             onClick={() => {
@@ -110,7 +110,7 @@ const AreaDropdownMenu: FC<{
               </React.Fragment>
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

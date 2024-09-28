@@ -16,7 +16,7 @@ const PlaceTypeDropdown: FC<{
   };
 
   return (
-    <div>
+    <div className="relative">
       {displayPlaceType ? (
         <button
           onClick={() => setIsSelectPlaceTypeOpen(!isSelectPlaceTypeOpen)}
@@ -38,7 +38,7 @@ const PlaceTypeDropdown: FC<{
       )}
 
       {isSelectPlaceTypeOpen && (
-        <>
+        <div className="absolute bg-white">
           {/* プルダウンメニュー外クリックでメニューを閉じる */}
           <div
             onClick={() => {
@@ -62,7 +62,7 @@ const PlaceTypeDropdown: FC<{
               </div>
             ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
