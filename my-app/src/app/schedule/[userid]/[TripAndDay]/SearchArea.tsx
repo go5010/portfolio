@@ -61,7 +61,6 @@ export const SearchArea: FC<{
     svc.findPlaceFromQuery(placeRequest, async (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         setSearchResults(results);
-        console.log(results);
         const newDetailsResults: Array<any> = [];
 
         for (const result of results!) {
@@ -84,14 +83,13 @@ export const SearchArea: FC<{
           detailsCallback(res, status);
         }
         setDetailsResults(newDetailsResults);
-        setResultLoading(false);
       }
+      setResultLoading(false);
     });
   };
 
   // nearbySearch
   const nearbySearch = () => {
-    console.log(placesLib, map);
     if (!placesLib || !map) return;
 
     const svc = new placesLib.PlacesService(map);
@@ -137,8 +135,8 @@ export const SearchArea: FC<{
         }
         setSearchResults(newSearchResults);
         setDetailsResults(newDetailsResults);
-        setResultLoading(false);
       }
+      setResultLoading(false);
     });
   };
 
@@ -151,6 +149,8 @@ export const SearchArea: FC<{
     // キーワード入力あり
     else if (queryKeyword) {
       setIsLack(""); //リセット
+      setSearchResults([]); //リセット
+      setDetailsResults([]); //リセット
       setDidSearch(true);
       setResultLoading(true);
       findPlaceSearch();
@@ -158,6 +158,8 @@ export const SearchArea: FC<{
     // エリア・カテゴリ入力あり
     else if (!queryKeyword && queryLngLat.length && queryPlaceType) {
       setIsLack(""); //リセット
+      setSearchResults([]); //リセット
+      setDetailsResults([]); //リセット
       setDidSearch(true);
       setResultLoading(true);
       nearbySearch();
