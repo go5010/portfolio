@@ -91,6 +91,7 @@ export const SearchArea: FC<{
 
   // nearbySearch
   const nearbySearch = () => {
+    console.log(placesLib, map);
     if (!placesLib || !map) return;
 
     const svc = new placesLib.PlacesService(map);
@@ -114,7 +115,6 @@ export const SearchArea: FC<{
         //   return result.vicinity?.includes("川越市");
         // });
         const newSearchResults = results;
-        console.log(newSearchResults);
         const newDetailsResults: Array<any> = [];
 
         for (const result of results!) {
@@ -145,8 +145,7 @@ export const SearchArea: FC<{
   // 検索
   const executeSearch = () => {
     // キーワード・エリア・カテゴリ全て未入力
-    if (!queryKeyword && !queryLngLat && !queryPlaceType) {
-      console.log("全て入力なし");
+    if (!queryKeyword && !queryLngLat.length && !queryPlaceType) {
       setIsLack("");
     }
     // キーワード入力あり
@@ -157,26 +156,21 @@ export const SearchArea: FC<{
       findPlaceSearch();
     }
     // エリア・カテゴリ入力あり
-    else if (!queryKeyword && queryLngLat && queryPlaceType) {
+    else if (!queryKeyword && queryLngLat.length && queryPlaceType) {
       setIsLack(""); //リセット
       setDidSearch(true);
       setResultLoading(true);
       nearbySearch();
     }
     // カテゴリが未入力
-    else if (!queryKeyword && queryLngLat && !queryPlaceType) {
+    else if (!queryKeyword && queryLngLat.length && !queryPlaceType) {
       setIsLack("PlaceType");
     }
     // エリアが未入力
-    else if (!queryKeyword && !queryLngLat && queryPlaceType) {
+    else if (!queryKeyword && !queryLngLat.length && queryPlaceType) {
       setIsLack("Area");
     }
   };
-
-  // useEffect(() => {
-  //   nearbySearch();
-  // }, [placesLib, map]);
-  // console.log(searchResults, detailsResults);
 
   return (
     <>
@@ -197,23 +191,36 @@ export const SearchArea: FC<{
         </div>
         <PrimaryButton onClickFunc={executeSearch}>検索</PrimaryButton>
       </div>
+
       {/* 検索未実施 */}
       {!didSearch && (
-        <div className="text-center font-extrabold xs:text-lg md:text-xl w-full mt-8">
-          「キーワード」か「エリアとカテゴリ」で検索してみましょう！
-        </div>
-      )}
-      {/* 検索中 */}
-      {didSearch && resultLoading && (
         <>
-          <div>loading...</div>{" "}
+          <div className="text-center font-extrabold xs:text-lg md:text-xl w-full mt-8">
+            「キーワード」か「エリアとカテゴリ」で検索してみましょう！
+          </div>
+          {/* Places API実行用Map */}
           <Map
             style={{ width: "0px", height: "0px" }}
             defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
             defaultZoom={10}
             gestureHandling={"greedy"}
-            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
             disableDefaultUI={true}
+            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
+          />
+        </>
+      )}
+      {/* 検索中 */}
+      {didSearch && resultLoading && (
+        <>
+          <div>loading...</div>
+          {/* Places API実行用Map */}
+          <Map
+            style={{ width: "0px", height: "0px" }}
+            defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
+            defaultZoom={10}
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
           />
         </>
       )}
@@ -231,23 +238,33 @@ export const SearchArea: FC<{
               />
             );
           })}
+          {/* Places API実行用Map */}
+          <Map
+            style={{ width: "0px", height: "0px" }}
+            defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
+            defaultZoom={10}
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
+          />
         </>
       )}
       {/* 検索結果なし */}
       {((didSearch && !resultLoading && !searchResults.length) ||
         (didSearch && !resultLoading && !detailsResults.length)) && (
-        <div>検索結果が見つかりませんでした</div>
+        <>
+          <div>検索結果が見つかりませんでした</div>
+          {/* Places API実行用Map */}
+          <Map
+            style={{ width: "0px", height: "0px" }}
+            defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
+            defaultZoom={10}
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
+          />
+        </>
       )}
-
-      {/* Places API実行用Map */}
-      <Map
-        style={{ width: "0px", height: "0px" }}
-        defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
-        defaultZoom={10}
-        gestureHandling={"greedy"}
-        disableDefaultUI={true}
-        mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
-      />
     </>
   );
 });
