@@ -126,10 +126,12 @@ const TravelTimeSearch: FC<{
         移動時間検索
       </div>
       <div className="flex items-center">
-        <div className="pr-6">出発地</div>
+        <div className="pr-6 whitespace-nowrap max-w-[30%] box-border">
+          出発地
+        </div>
         <select
           onChange={(e) => handleStartSpotSelect(e.target.value)}
-          className="p-1 border border-gray-300 rounded-md flex-grow"
+          className="p-1 border border-gray-300 rounded-md flex-grow mix-w-[70%] box-border"
         >
           <option>-- spotを選択 --</option>
           {userTrip
@@ -147,10 +149,10 @@ const TravelTimeSearch: FC<{
       </div>
 
       <div className="flex items-center">
-        <div className="pr-6">目的地</div>
+        <div className="pr-6 whitespace-nowrap">目的地</div>
         <select
           onChange={(e) => handleEndSpotSelect(e.target.value)}
-          className="p-1 border border-gray-300 rounded-md flex-grow"
+          className="p-1 border border-gray-300 rounded-md flex-grow overflow-scroll"
         >
           <option>-- spotを選択 --</option>
           {userTrip
