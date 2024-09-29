@@ -50,38 +50,82 @@ const SearchResult: FC<{
         </PrimaryButton>
       </div>
       <div className="flex ml-8">
-        <div className="mr-4">
-          <Image
-            src={detailsResult.photos[0].getUrl()}
-            alt=""
-            width={220}
-            height={220}
-            className="object-cover w-[220px] h-[220px]"
-          />
-          <div className="mt-[5px] flex justify-between">
-            <Image
-              src={detailsResult.photos[1].getUrl()}
-              alt=""
-              width={70}
-              height={70}
-              className="object-cover w-[70px] h-[70px]"
-            />
-            <Image
-              src={detailsResult.photos[2].getUrl()}
-              alt=""
-              width={70}
-              height={70}
-              className="object-cover w-[70px] h-[70px]"
-            />
-            <Image
-              src={detailsResult.photos[3].getUrl()}
-              alt=""
-              width={70}
-              height={70}
-              className="object-cover w-[70px] h-[70px]"
-            />
+        {detailsResult.photos ? (
+          <div className="mr-4">
+            {detailsResult.photos[0] ? (
+              <Image
+                src={detailsResult.photos[0].getUrl()}
+                alt=""
+                width={220}
+                height={220}
+                className="object-cover w-[220px] h-[220px]"
+              />
+            ) : (
+              <div className="w-[220px] h-[220px] flex items-center justify-center text-center leading-[1] border">
+                No Image
+              </div>
+            )}
+            <div className="mt-[5px] flex justify-between">
+              {detailsResult.photos[1] ? (
+                <Image
+                  src={detailsResult.photos[1].getUrl()}
+                  alt=""
+                  width={70}
+                  height={70}
+                  className="object-cover w-[70px] h-[70px]"
+                />
+              ) : (
+                <div className="w-[70px] h-[70px] flex items-center justify-center text-center leading-[1] border">
+                  No Image
+                </div>
+              )}
+              {detailsResult.photos[2] ? (
+                <Image
+                  src={detailsResult.photos[2].getUrl()}
+                  alt=""
+                  width={70}
+                  height={70}
+                  className="object-cover w-[70px] h-[70px]"
+                />
+              ) : (
+                <div className="w-[70px] h-[70px] flex items-center justify-center text-center leading-[1] border">
+                  No Image
+                </div>
+              )}
+              {detailsResult.photos[3] ? (
+                <Image
+                  src={detailsResult.photos[3].getUrl()}
+                  alt=""
+                  width={70}
+                  height={70}
+                  className="object-cover w-[70px] h-[70px]"
+                />
+              ) : (
+                <div className="w-[70px] h-[70px] flex items-center justify-center text-center leading-[1] border">
+                  No Image
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="mr-4">
+            <div className="w-[220px] h-[220px] flex items-center justify-center text-center leading-[1] border">
+              No Image
+            </div>
+            <div className="mt-[5px] flex justify-between">
+              <div className="w-[70px] h-[70px] flex items-center justify-center text-center leading-[1] border">
+                No Image
+              </div>
+              <div className="w-[70px] h-[70px] flex items-center justify-center text-center leading-[1] border">
+                No Image
+              </div>
+              <div className="w-[70px] h-[70px] flex items-center justify-center text-center leading-[1] border">
+                No Image
+              </div>
+            </div>
+          </div>
+        )}
+
         <div>
           <p className="font-semibold text-xl">{searchResult.name}</p>
           <p>{searchResult.vicinity}</p>

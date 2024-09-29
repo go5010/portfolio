@@ -48,7 +48,7 @@ const AreaDropdownMenu: FC<{
       {selectedMunicipalities ? (
         <button
           onClick={() => setIsSelectAreaOpen(!isSelectAreaOpen)}
-          className="border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left pl-2"
+          className="border border-gray-400 border-r-0 border-l-0 w-[250px] h-[40px] mb-1 text-left pl-2"
         >
           {`${displayPrefecture} ${selectedMunicipalities}`}
         </button>
@@ -57,8 +57,8 @@ const AreaDropdownMenu: FC<{
           onClick={() => setIsSelectAreaOpen(!isSelectAreaOpen)}
           className={
             isLack === "Area"
-              ? "border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left text-red-400 pl-2"
-              : "border border-gray-400 border-r-0 border-l-0 w-[200px] h-[30px] mb-1 text-left text-gray-300 pl-2"
+              ? "border border-gray-400 border-r-0 border-l-0 w-[250px] h-[40px] mb-1 text-left text-red-400 pl-2"
+              : "border border-gray-400 border-r-0 border-l-0 w-[250px] h-[40px] mb-1 text-left text-gray-300 pl-2"
           }
         >
           エリアを選択

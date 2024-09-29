@@ -179,11 +179,11 @@ export const SearchArea: FC<{
       <div className="flex mt-6 justify-center items-center">
         <div className="flex mr-10">
           <input
-            className="border border-gray-400 rounded-tl-md rounded-bl-md h-[30px] focus:outline-none p-2 placeholder-gray-300"
+            className="border border-gray-400 rounded-tl-md rounded-bl-md w-[250px] h-[40px] focus:outline-none p-2 placeholder-gray-300"
             onChange={(event) => {
               setQueryKeyword(event.target.value);
             }}
-            placeholder="キーワード"
+            placeholder="キーワードを入力"
           ></input>
           <AreaDropdownMenu setQueryLngLat={setQueryLngLat} isLack={isLack} />
           <PlaceTypeDropdown

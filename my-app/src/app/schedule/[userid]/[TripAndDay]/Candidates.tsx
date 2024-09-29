@@ -376,29 +376,31 @@ const Candidates: FC<{
         </div>
 
         {/* 移動時間検索エリア */}
-        <div>
-          <Map
-            style={{ width: "400px", height: "400px" }}
-            defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
-            defaultZoom={10}
-            gestureHandling={"greedy"}
-            disableDefaultUI={true}
-            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
-          >
-            {userTrip
-              .find((trip) => {
-                return trip.id === urlTripID;
-              })
-              ?.schedules[urlTripDay - 1].map((spot, spotIndex) => {
-                return (
-                  <MapMarker
-                    location={spot.location}
-                    spotIndex={spotIndex}
-                    targetSpot={targetSpot}
-                  />
-                );
-              })}
-          </Map>
+        <div className="w-1/3">
+          <div className="w-100%, aspect-square">
+            <Map
+              style={{ width: "100%", height: "100%" }}
+              defaultCenter={{ lat: 35.6895, lng: 139.6917 }}
+              defaultZoom={10}
+              gestureHandling={"greedy"}
+              disableDefaultUI={true}
+              mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
+            >
+              {userTrip
+                .find((trip) => {
+                  return trip.id === urlTripID;
+                })
+                ?.schedules[urlTripDay - 1].map((spot, spotIndex) => {
+                  return (
+                    <MapMarker
+                      location={spot.location}
+                      spotIndex={spotIndex}
+                      targetSpot={targetSpot}
+                    />
+                  );
+                })}
+            </Map>
+          </div>
           <TravelTimeSearch
             userTrip={userTrip}
             urlTripDay={urlTripDay}

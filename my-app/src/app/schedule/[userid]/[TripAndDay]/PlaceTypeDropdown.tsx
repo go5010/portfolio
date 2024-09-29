@@ -20,7 +20,7 @@ const PlaceTypeDropdown: FC<{
       {displayPlaceType ? (
         <button
           onClick={() => setIsSelectPlaceTypeOpen(!isSelectPlaceTypeOpen)}
-          className="border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[200px] h-[30px] mb-1 text-left  pl-2"
+          className="border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[250px] h-[40px] mb-1 text-left  pl-2"
         >
           {displayPlaceType}
         </button>
@@ -29,8 +29,8 @@ const PlaceTypeDropdown: FC<{
           onClick={() => setIsSelectPlaceTypeOpen(!isSelectPlaceTypeOpen)}
           className={
             isLack === "PlaceType"
-              ? "border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[200px] h-[30px] mb-1 text-left text-red-400 pl-2"
-              : "border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[200px] h-[30px] mb-1 text-left text-gray-300 pl-2"
+              ? "border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[250px] h-[40px] mb-1 text-left text-red-400 pl-2"
+              : "border border-gray-400 rounded-tr-md rounded-br-md border-l-gray-200 w-[250px] h-[40px] mb-1 text-left text-gray-300 pl-2"
           }
         >
           カテゴリを選択
