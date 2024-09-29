@@ -214,7 +214,7 @@ export const SearchArea: FC<{
       {/* 検索中 */}
       {didSearch && resultLoading && (
         <>
-          <div>loading...</div>
+          <div className="text-center w-full mt-8">loading...</div>
           {/* Places API実行用Map */}
           <Map
             style={{ width: "0px", height: "0px" }}
@@ -227,8 +227,8 @@ export const SearchArea: FC<{
         </>
       )}
       {/* 検索完了 */}
-      {((didSearch && !resultLoading && searchResults.length) ||
-        (didSearch && !resultLoading && detailsResults.length)) && (
+      {((didSearch && !resultLoading && searchResults.length !== 0) ||
+        (didSearch && !resultLoading && detailsResults.length !== 0)) && (
         <>
           <div className="h-[20px]"></div>
           {searchResults.map((result: any, index: number) => {
@@ -255,7 +255,9 @@ export const SearchArea: FC<{
       {((didSearch && !resultLoading && !searchResults.length) ||
         (didSearch && !resultLoading && !detailsResults.length)) && (
         <>
-          <div>検索結果が見つかりませんでした</div>
+          <div className="text-center w-full mt-8">
+            検索結果が見つかりませんでした
+          </div>
           {/* Places API実行用Map */}
           <Map
             style={{ width: "0px", height: "0px" }}
