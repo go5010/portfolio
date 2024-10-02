@@ -95,7 +95,7 @@ const Schedule = memo(() => {
     urlTripDay === null ||
     urlTripID === null
   ) {
-    return <div>Loading...</div>; //ローディング表示
+    return <div>Loading...</div>; //ローディング表示.
   }
 
   return (
