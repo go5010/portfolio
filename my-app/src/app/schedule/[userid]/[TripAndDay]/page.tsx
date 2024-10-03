@@ -80,7 +80,7 @@ const Schedule = memo(() => {
         fetchTrips();
       }
     }
-  }, [loginLoading, candiOrSearch]); // 追加した候補スポットを反映させるために，candiOrSearchを依存配列に指定．
+  }, [loginLoading, candiOrSearch]); // 追加した候補スポットを反映させるために，candiOrSearchを依存配列に指定
 
   const fetchTrips = async () => {
     if (!loginLoading) {
