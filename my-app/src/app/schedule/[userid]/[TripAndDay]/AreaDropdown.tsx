@@ -24,7 +24,7 @@ const AreaDropdownMenu: FC<{
     if (selectedPrefecture !== prefecture) {
       setSelectedPrefecture(prefecture);
     } else {
-      setSelectedPrefecture(""); //サブメニューを閉じる
+      setSelectedPrefecture(""); //サブメニューを閉じる.
     }
   };
 
