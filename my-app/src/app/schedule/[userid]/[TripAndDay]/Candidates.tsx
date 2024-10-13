@@ -275,7 +275,7 @@ const Candidates: FC<{
                             size="small"
                           />
                         </div>
-                        <div>{`・住所：${spot.address}`}</div>
+                        {spot.address && <div>{`・住所：${spot.address}`}</div>}
                         {spot.open_hours_mon && (
                           <div>
                             <div className="mb-1">・営業日/時間</div>

@@ -64,11 +64,6 @@ const ScheduleSidebar = memo(() => {
     if (!loginLoading) {
       const trips: userTripType[] = await createTripListArr(loginUser!.uid);
       setUserTrip(trips);
-      // setTripOpen(
-      //   trips.map((_, index) => {
-      //     return { tripNo: index + 1, open: false };
-      //   })
-      // );
       setInputmode(
         trips.map((_, index) => {
           return { tripNo: index + 1, input: false };
