@@ -203,6 +203,18 @@ const ScheduleSidebar = memo(() => {
   ) => {
     await deleteTrip(loginUser!.uid, targetTripTitle);
     handleTripEditClose(clickedIndex);
+    const newTripOpen = tripOpen
+      ?.map((trip, index) => {
+        if (index < clickedIndex) trip;
+        if (index === clickedIndex) return;
+        if (index > clickedIndex)
+          return {
+            tripNo: trip.tripNo - 1,
+            open: trip.open,
+          };
+      })
+      .filter((trip) => trip !== undefined);
+    setTripOpen(newTripOpen);
     fetchTrips();
   };
 
@@ -294,7 +306,7 @@ const ScheduleSidebar = memo(() => {
                 </div>
                 {inputmode![index].input ? (
                   <input
-                    className="px-2 border focus:outline-none z-20 left-0 right-0 max-w-full box-border"
+                    className="px-2 border focus:outline-none z-20 max-w-full box-border"
                     style={{ width: "100%" }}
                     autoFocus={true}
                     onKeyDown={(e) => handleKeyDown(e)}
@@ -461,18 +473,19 @@ const ScheduleSidebar = memo(() => {
         );
       })}
       {newTripInput && (
-        <>
+        <div className="w-full pl-6">
           <input
-            className="ml-6 px-2 border focus:outline-none"
+            className="px-2 border focus:outline-none max-w-full box-border"
+            style={{ width: "100%" }}
             autoFocus={true}
             onKeyDown={handleKeyDown2}
             onChange={handleChange2}
           />
           <div
-            className="w-screen h-screen fixed top-0 left-0 z-10 cursor-default"
+            className="w-screen h-screen fixed top-0 left-0 cursor-default z-10"
             onClick={() => setNewTripInput(false)}
           ></div>
-        </>
+        </div>
       )}
       <div className="pl-6">
         <button

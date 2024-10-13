@@ -62,12 +62,22 @@ export async function createTrip(
   targetUserID: string,
   tripName: string
 ): Promise<any> {
+  // 現在時刻取得
+  const now = new Date();
+  const year = now.getFullYear(); // 年
+  const month = String(now.getMonth() + 1).padStart(2, "0"); // 月 (0から始まるため+1)
+  const day = String(now.getDate()).padStart(2, "0"); // 日
+  const hours = String(now.getHours()).padStart(2, "0"); // 時
+  const minutes = String(now.getMinutes()).padStart(2, "0"); // 分
+  const seconds = String(now.getSeconds()).padStart(2, "0"); // 秒
+  const formattedDateTime = `${year}${month}${day}${hours}${minutes}${seconds}`;
+
   const tripsRef = collection(firestore, "trips");
   const q = query(tripsRef, where("userID", "==", targetUserID));
   const querySnapshot = await getDocs(q);
   const tripDoc = await addDoc(
     collection(firestore, "trips", querySnapshot.docs[0].id, "userTrips"),
-    { title: tripName }
+    { title: tripName, createdAt: formattedDateTime }
   );
   await addDoc(
     collection(
