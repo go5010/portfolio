@@ -210,7 +210,7 @@ const Candidates: FC<{
     return (
       <div className="flex mt-5 px-3">
         {/* 候補spotカード */}
-        <div className="w-3/5 flex flex-col">
+        <div className="w-[65%] flex flex-col">
           {userTrip
             .find((trip) => {
               return trip.id === urlTripID;
@@ -220,8 +220,8 @@ const Candidates: FC<{
                 <div
                   className={
                     cardOpen![spotIndex].open
-                      ? "relative w-4/5"
-                      : "relative w-1/3"
+                      ? "relative w-9/10 mr-6"
+                      : "relative w-1/2 mr-6"
                   }
                   key={spot.title}
                 >
@@ -376,8 +376,8 @@ const Candidates: FC<{
         </div>
 
         {/* 移動時間検索エリア */}
-        <div className="w-2/5">
-          <div className="w-100%, aspect-square">
+        <div className="w-[35%]">
+          <div className="w-[100%] aspect-square mx-auto">
             <Map
               style={{ width: "100%", height: "100%" }}
               defaultCenter={{ lat: 35.6895, lng: 139.6917 }}

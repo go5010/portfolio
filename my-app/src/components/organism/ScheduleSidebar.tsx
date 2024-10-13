@@ -294,7 +294,8 @@ const ScheduleSidebar = memo(() => {
                 </div>
                 {inputmode![index].input ? (
                   <input
-                    className="px-2 border focus:outline-none z-20"
+                    className="px-2 border focus:outline-none z-20 left-0 right-0 max-w-full box-border"
+                    style={{ width: "100%" }}
                     autoFocus={true}
                     onKeyDown={(e) => handleKeyDown(e)}
                     onChange={handleChange}
