@@ -34,7 +34,7 @@ const ScheduleSidebar = memo(() => {
   const [inputmode, setInputmode] = useState<
     { tripNo: number; input: boolean }[] | undefined
   >(); //名前の変更input
-  const [tripListLoading, setTripListLoading] = useState<boolean>(true); //マウント時のfetchTrip完了の判定
+  const [tripListLoading, setTripListLoading] = useState<boolean>(true); //マウント時，旅行削除時のfetchTrip完了の判定
 
   // 名前の変更input
   const renameInput = useRef<HTMLInputElement>(null);
@@ -64,11 +64,11 @@ const ScheduleSidebar = memo(() => {
     if (!loginLoading) {
       const trips: userTripType[] = await createTripListArr(loginUser!.uid);
       setUserTrip(trips);
-      setTripOpen(
-        trips.map((_, index) => {
-          return { tripNo: index + 1, open: false };
-        })
-      );
+      // setTripOpen(
+      //   trips.map((_, index) => {
+      //     return { tripNo: index + 1, open: false };
+      //   })
+      // );
       setInputmode(
         trips.map((_, index) => {
           return { tripNo: index + 1, input: false };
@@ -89,7 +89,7 @@ const ScheduleSidebar = memo(() => {
     );
   };
 
-  // 選択されている旅行のbg colorを黒くするための旅行ID・日程の取得
+  // 選択されている旅行のbg colorを濃くするための旅行ID・日程の取得
   const pathname = usePathname();
   function escapeRegExp(string: string) {
     return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, "\\$&");
@@ -205,7 +205,7 @@ const ScheduleSidebar = memo(() => {
     handleTripEditClose(clickedIndex);
     const newTripOpen = tripOpen
       ?.map((trip, index) => {
-        if (index < clickedIndex) trip;
+        if (index < clickedIndex) return trip;
         if (index === clickedIndex) return;
         if (index > clickedIndex)
           return {
@@ -214,8 +214,11 @@ const ScheduleSidebar = memo(() => {
           };
       })
       .filter((trip) => trip !== undefined);
+    // console.log(clickedIndex, newTripOpen);
     setTripOpen(newTripOpen);
-    fetchTrips();
+    setTripListLoading(true);
+    await fetchTrips();
+    setTripListLoading(false);
   };
 
   // 日程の削除
@@ -247,7 +250,7 @@ const ScheduleSidebar = memo(() => {
     }
   };
 
-  // 新規作成input
+  // 旅行の新規作成input
   const [newTripInput, setNewTripInput] = useState<boolean>(false);
   const [newTripName, setNewTripName] = useState("");
   const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -257,6 +260,14 @@ const ScheduleSidebar = memo(() => {
     if (event.key === "Enter" || event.key === "Tab") {
       setNewTripInput(false);
       newTripName !== "" && createTrip(loginUser!.uid, newTripName);
+      if (newTripName !== "") {
+        const newTripOpen = [...tripOpen!];
+        newTripOpen?.push({
+          tripNo: tripOpen!.length + 1,
+          open: false,
+        });
+        setTripOpen(newTripOpen);
+      }
       newTripName !== "" && fetchTrips();
       setNewTripName("");
     } else if (event.key === "Escape") {
@@ -270,6 +281,12 @@ const ScheduleSidebar = memo(() => {
       if (!newTripInput) {
         if (newTripName !== "") {
           createTrip(loginUser!.uid, newTripName);
+          const newTripOpen = [...tripOpen!];
+          newTripOpen?.push({
+            tripNo: tripOpen!.length + 1,
+            open: false,
+          });
+          setTripOpen(newTripOpen);
           fetchTrips();
           setNewTripName("");
         }
