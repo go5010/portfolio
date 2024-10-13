@@ -106,44 +106,46 @@ const Schedule = memo(() => {
           <div className="mb-6 ml-2 font-extrabold xs:text-lg md:text-xl">
             {userTripTitle!}　{`>`}　{urlTripDay!}日目
           </div>
-          <div className="flex border-b-2 pb-1">
-            <div
-              onClick={() => setCandiOrSeacrch("candidates")}
-              className={
-                candiOrSearch === "candidates"
-                  ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
-                  : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
-              }
-            >
-              候補
+          <div className="lg:max-w-[1000px] mx-auto">
+            <div className="flex border-b-2 pb-1">
+              <div
+                onClick={() => setCandiOrSeacrch("candidates")}
+                className={
+                  candiOrSearch === "candidates"
+                    ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
+                    : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
+                }
+              >
+                候補
+              </div>
+              <div
+                onClick={() => setCandiOrSeacrch("search")}
+                className={
+                  candiOrSearch === "search"
+                    ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
+                    : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
+                }
+              >
+                検索
+              </div>
             </div>
-            <div
-              onClick={() => setCandiOrSeacrch("search")}
-              className={
-                candiOrSearch === "search"
-                  ? "ml-8 pb-1 px-1 border-b-[6px] border-gray-600"
-                  : "ml-8 pb-1 px-1 cursor-pointer hover:opacity-70"
-              }
-            >
-              検索
-            </div>
+            {candiOrSearch === "candidates" ? (
+              <Candidates
+                cardOpen={cardOpen}
+                setCardOpen={setCardOpen}
+                userTrip={userTrip}
+                setUserTrip={setUserTrip}
+                urlTripDay={urlTripDay}
+                urlTripID={urlTripID}
+                userTripTitle={userTripTitle}
+                fetchTrips={fetchTrips}
+                isChangedSpotList={isChangedSpotList}
+                setIsChangedSpotList={setIsChangedSpotList}
+              />
+            ) : (
+              <SearchArea setIsChangedSpotList={setIsChangedSpotList} />
+            )}
           </div>
-          {candiOrSearch === "candidates" ? (
-            <Candidates
-              cardOpen={cardOpen}
-              setCardOpen={setCardOpen}
-              userTrip={userTrip}
-              setUserTrip={setUserTrip}
-              urlTripDay={urlTripDay}
-              urlTripID={urlTripID}
-              userTripTitle={userTripTitle}
-              fetchTrips={fetchTrips}
-              isChangedSpotList={isChangedSpotList}
-              setIsChangedSpotList={setIsChangedSpotList}
-            />
-          ) : (
-            <SearchArea setIsChangedSpotList={setIsChangedSpotList} />
-          )}
         </div>
       </div>
     </APIProvider>
