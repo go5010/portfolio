@@ -244,7 +244,7 @@ export async function createTripListArr(targetUserID: string): Promise<any> {
     q1Snapshot.docs[0].id,
     "userTrips"
   );
-  const q2 = query(userTripsRef);
+  const q2 = query(userTripsRef, orderBy("createdAt"));
   const q2Snapshot = await getDocs(q2);
 
   const tripList = [];
