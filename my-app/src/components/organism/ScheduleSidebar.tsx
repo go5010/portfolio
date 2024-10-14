@@ -179,7 +179,7 @@ const ScheduleSidebar = memo(() => {
       })
     );
   };
-  // クリックでinput閉じた際の旅行名変更
+  // クリックでinput閉じた際の旅行名変更.
   useEffect(() => {
     const renameTripByCloseInput = async () => {
       if (
