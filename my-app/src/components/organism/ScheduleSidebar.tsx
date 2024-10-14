@@ -125,7 +125,7 @@ const ScheduleSidebar = memo(() => {
     setTripAnchorEls(newAnchorEls);
   };
   // 名前の変更input
-  const [TitleOfActiveInput, setTitleOfActiveInput] = useState("");
+  const [TitleOfRenameTargetTrip, setTitleOfRenameTargetTrip] = useState("");
   const handleRenameTrip = (clickedIndex: number, targetTripTitle: string) => {
     setInputmode(
       inputmode!.map((trip, index) => {
@@ -135,8 +135,14 @@ const ScheduleSidebar = memo(() => {
         return trip;
       })
     );
-    setTitleOfActiveInput(targetTripTitle);
+    setTitleOfRenameTargetTrip(targetTripTitle);
     handleTripEditClose(clickedIndex);
+
+    setTimeout(() => {
+      if (renameInput.current) {
+        renameInput.current.focus();
+      }
+    }, 100); // 100ミリ秒後にフォーカスを移す
   };
   const [renamedTripName, setRenamedTripName] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,9 +156,9 @@ const ScheduleSidebar = memo(() => {
         })
       );
       renamedTripName !== "" &&
-        renameTrip(loginUser!.uid, TitleOfActiveInput, renamedTripName);
+        renameTrip(loginUser!.uid, TitleOfRenameTargetTrip, renamedTripName);
       renamedTripName !== "" && fetchTrips();
-      setTitleOfActiveInput("");
+      setTitleOfRenameTargetTrip("");
       setRenamedTripName("");
     } else if (event.key === "Escape") {
       setInputmode(
@@ -160,7 +166,7 @@ const ScheduleSidebar = memo(() => {
           return { tripNo: index + 1, input: false };
         })
       );
-      setTitleOfActiveInput("");
+      setTitleOfRenameTargetTrip("");
       setRenamedTripName("");
     }
   };
@@ -181,9 +187,13 @@ const ScheduleSidebar = memo(() => {
         inputmode!.every((trip) => trip.input === false)
       ) {
         if (renamedTripName !== "") {
-          await renameTrip(loginUser!.uid, TitleOfActiveInput, renamedTripName);
+          await renameTrip(
+            loginUser!.uid,
+            TitleOfRenameTargetTrip,
+            renamedTripName
+          );
           await fetchTrips();
-          setTitleOfActiveInput("");
+          setTitleOfRenameTargetTrip("");
           setRenamedTripName("");
         }
       }
@@ -209,7 +219,6 @@ const ScheduleSidebar = memo(() => {
           };
       })
       .filter((trip) => trip !== undefined);
-    // console.log(clickedIndex, newTripOpen);
     setTripOpen(newTripOpen);
     setTripListLoading(true);
     await fetchTrips();

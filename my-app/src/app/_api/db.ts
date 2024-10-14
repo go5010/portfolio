@@ -108,6 +108,7 @@ export async function renameTrip(
   );
   const q2 = query(userTripsRef, where("title", "==", targetTrip));
   const q2Snapshot = await getDocs(q2);
+  const createdAt = q2Snapshot.docs[0].data().createdAt;
   await setDoc(
     doc(
       firestore,
@@ -116,7 +117,7 @@ export async function renameTrip(
       "userTrips",
       q2Snapshot.docs[0].id
     ),
-    { title: newTripName }
+    { title: newTripName, createdAt: createdAt }
   );
 }
 

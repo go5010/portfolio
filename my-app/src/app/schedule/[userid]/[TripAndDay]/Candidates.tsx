@@ -117,7 +117,6 @@ const Candidates: FC<{
     const map = useMap();
     useEffect(() => {
       const fitMapToMarkers = async () => {
-        console.log(isChangedSpotList);
         if (!map) return;
 
         if (isChangedSpotList) {
