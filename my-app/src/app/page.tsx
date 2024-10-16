@@ -114,6 +114,8 @@ export default function Home() {
             onClick={moveToSchedule}
           >
             使ってみる
+            <br />
+            （ゲストログイン）
           </button>
         </div>
       </div>
