@@ -219,7 +219,7 @@ const ScheduleSidebar = memo(() => {
           };
       })
       .filter((trip) => trip !== undefined);
-    setTripOpen(newTripOpen);
+    setTripOpen(newTripOpen!);
     setTripListLoading(true);
     await fetchTrips();
     setTripListLoading(false);
