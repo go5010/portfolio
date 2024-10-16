@@ -208,8 +208,8 @@ const ScheduleSidebar = memo(() => {
   ) => {
     await deleteTrip(loginUser!.uid, targetTripTitle);
     handleTripEditClose(clickedIndex);
-    const newTripOpen = tripOpen
-      ?.map((trip, index) => {
+    const newTripOpen = tripOpen!
+      .map((trip, index) => {
         if (index < clickedIndex) return trip;
         if (index === clickedIndex) return;
         if (index > clickedIndex)
@@ -219,7 +219,7 @@ const ScheduleSidebar = memo(() => {
           };
       })
       .filter((trip) => trip !== undefined);
-    setTripOpen(newTripOpen!);
+    setTripOpen(newTripOpen);
     setTripListLoading(true);
     await fetchTrips();
     setTripListLoading(false);
