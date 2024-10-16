@@ -171,7 +171,7 @@ const ScheduleSidebar = memo(() => {
     }
   };
 
-  // renameInputをクリックで閉じる
+  // renameInputをクリックで閉じる.
   const handleClickOutOfReInput = (userTrip: userTripType[]) => {
     setInputmode(
       userTrip!.map((_, index) => {
