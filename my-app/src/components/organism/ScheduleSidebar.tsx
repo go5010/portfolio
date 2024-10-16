@@ -211,14 +211,16 @@ const ScheduleSidebar = memo(() => {
     const newTripOpen = tripOpen!
       .map((trip, index) => {
         if (index < clickedIndex) return trip;
-        if (index === clickedIndex) return;
+        if (index === clickedIndex) return undefined;
         if (index > clickedIndex)
           return {
             tripNo: trip.tripNo - 1,
             open: trip.open,
           };
       })
-      .filter((trip) => trip !== undefined)!;
+      .filter(
+        (trip): trip is { tripNo: number; open: boolean } => trip !== undefined
+      );
     setTripOpen(newTripOpen);
     setTripListLoading(true);
     await fetchTrips();
