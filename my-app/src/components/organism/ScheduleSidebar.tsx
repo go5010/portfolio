@@ -142,7 +142,7 @@ const ScheduleSidebar = memo(() => {
       if (renameInput.current) {
         renameInput.current.focus();
       }
-    }, 100); // 100ミリ秒後にフォーカスを移す.
+    }, 100); // 100ミリ秒後にフォーカスを移す
   };
   const [renamedTripName, setRenamedTripName] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
