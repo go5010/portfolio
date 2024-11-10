@@ -22,8 +22,7 @@ Next.jsを使用してポートフォリオ用のwebアプリケーションを�
 ## 使用イメージ
 **ゲストログイン**  
 ログインしていない状態で，トップページの「使ってみる」ボタンを押すことでゲストログインできます．
-
-guestlogin.gif
+![](https://qiita-user-contents.imgix.net/https%3A%2F%2Fqiita-image-store.s3.ap-northeast-1.amazonaws.com%2F0%2F3621851%2F04748019-2e76-4eb9-00cf-3ada5bc2a521.gif?ixlib=rb-4.0.0&auto=format&gif-q=60&q=75&s=dec9580b802ce096e41e6886b1bcce96)
 
 
 **旅行の新規作成/名前変更/削除，日程の追加/削除**
