@@ -114,7 +114,7 @@ const Hamburger = () => {
             </Link>
           </nav>
         ) : (
-          <nav>
+          <nav className="flex flex-col text-center">
             <Link
               href="/"
               onClick={handleMenuOpen}
