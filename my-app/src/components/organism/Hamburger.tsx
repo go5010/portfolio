@@ -88,7 +88,7 @@ const Hamburger = () => {
                   : "py-2 hover:bg-gray-300"
               }
             >
-              ログイン.
+              ログイン
             </Link>
             <Link
               href="/createaccount"
