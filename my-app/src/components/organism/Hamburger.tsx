@@ -10,7 +10,7 @@ import { useLoginUser } from "@/hooks/useLoginUser";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const Hamburger = () => {
+const Hamburger:FC<{handleLogout:()=>void}> = ({handleLogout}) => {
   const { user } = useLoginUser();
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState(false);
@@ -116,8 +116,11 @@ const Hamburger = () => {
         ) : (
           <nav className="flex flex-col text-center">
             <Link
-              href="/"
-              onClick={handleMenuOpen}
+              href="/login"
+              onClick={()=>{
+                handleLogout()
+                handleMenuOpen()
+              }}
               className="py-2 hover:bg-gray-300"
             >
               ログアウト

@@ -34,7 +34,7 @@ const Header = () => {
             <Link href="/">spots viewer</Link>
           </h1>
         </div>
-        <Hamburger />
+        <Hamburger handleLogout={handleLogout}/>
         <div className="font-semibold hidden md:block">
           {user === null ? (
             <nav>
